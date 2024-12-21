@@ -1,11 +1,20 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { Prisma } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { DbService } from '../db/db.service';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly dbService: DbService) {}
+  constructor(
+    private readonly dbService: DbService,
+    private readonly jwtService: JwtService,
+  ) {}
 
   async signup(body: Prisma.UserCreateInput) {
     const user = await this.dbService.user.findUnique({
@@ -21,9 +30,15 @@ export class UsersService {
 
     const hashedPassword = await bcrypt.hash(body.password, 10);
 
-    return this.dbService.user.create({
+    const newUser = await this.dbService.user.create({
       data: { ...body, password: hashedPassword },
     });
+
+    const { firstName, lastName, email } = newUser;
+    return {
+      user: { firstName, lastName, email },
+      token: this.jwtService.sign({ id: newUser.id }),
+    };
   }
 
   async login(email: string, password: string) {
@@ -42,16 +57,13 @@ export class UsersService {
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
-      throw new HttpException(
-        {
-          message: 'Invalid email or password',
-          statusCode: HttpStatus.UNAUTHORIZED,
-        },
-        HttpStatus.UNAUTHORIZED,
-      );
+      throw new UnauthorizedException();
     }
-
-    return { message: 'Login Successful', user };
+    const { firstName, lastName, email: userEmail } = user;
+    return {
+      user: { firstName, lastName, email: userEmail },
+      token: this.jwtService.sign({ id: user.id }),
+    };
   }
 
   async update(id: string, body: Prisma.UserUpdateInput) {

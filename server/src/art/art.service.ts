@@ -10,7 +10,10 @@ export class ArtService {
     private readonly supabaseService: SupabaseService,
   ) {}
 
-  async create(file: Express.Multer.File) {
+  async create(
+    file: Express.Multer.File,
+    body: { title: string; desc: string },
+  ) {
     const { data, error } = await this.supabaseService.uploadFile(
       'art',
       `public/${file.originalname}`,
@@ -23,7 +26,15 @@ export class ArtService {
     );
 
     if (error) throw error;
-    return data;
+
+    return this.dbService.art.create({
+      data: {
+        title: body.title,
+        desc: body.desc,
+        imageUrl: `${process.env.SUPABASE_URL}/storage/v1/object/public/${data.fullPath}`,
+        userId: 'dcb6cf0c-a1ad-4690-a16b-c78966c6b958',
+      },
+    });
   }
 
   findUsers() {
