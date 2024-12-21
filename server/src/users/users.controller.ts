@@ -1,10 +1,14 @@
 import { Body, Controller, Delete, Param, Patch, Post } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
+import { SupabaseService } from 'src/supabase/supabase.service';
 import { UsersService } from './users.service';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly supabaseService: SupabaseService,
+  ) {}
 
   @Post('signup')
   signup(@Body() body: Prisma.UserCreateInput) {

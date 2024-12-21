@@ -4,6 +4,6 @@ import { ArtService } from './art.service';
 
 @Module({
   controllers: [ArtController],
-  providers: [ArtService]
+  providers: [ArtService],
 })
 export class ArtModule {}

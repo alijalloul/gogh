@@ -1,11 +1,10 @@
 import { Module } from '@nestjs/common';
-import { DbModule } from 'src/db/db.module';
+import { SupabaseService } from 'src/supabase/supabase.service';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 
 @Module({
-  imports: [DbModule],
   controllers: [UsersController],
-  providers: [UsersService],
+  providers: [UsersService, SupabaseService],
 })
 export class UsersModule {}
