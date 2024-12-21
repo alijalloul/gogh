@@ -11,7 +11,6 @@ export class ArtService {
   ) {}
 
   async create(file: Express.Multer.File) {
-    console.log('file: ', file);
     const { data, error } = await this.supabaseService.uploadFile(
       'art',
       `public/${file.originalname}`,
@@ -19,6 +18,7 @@ export class ArtService {
       {
         cacheControl: '3600',
         upsert: false,
+        contentType: 'image/*',
       },
     );
 
