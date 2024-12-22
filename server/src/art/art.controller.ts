@@ -4,17 +4,19 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
+  Query,
   Req,
   UploadedFile,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { Prisma } from '@prisma/client';
 import { Request } from 'express';
 import { ArtService } from './art.service';
+import { UpdateArtDto } from './dto/updateArtDto';
 import { JwtAuthGaurd } from './guards/jwt.guard';
 
 @Controller('art')
@@ -24,21 +26,23 @@ export class ArtController {
   @Post()
   @UseInterceptors(FileInterceptor('file'))
   @UseGuards(JwtAuthGaurd)
-  uploadFile(
+  create(
     @UploadedFile() file: Express.Multer.File,
     @Body() body: { title: string; desc: string },
     @Req() req: Request,
   ) {
-    req.user;
-    if (!file) {
-      throw new Error('File is undefined');
-    }
-    return this.artService.create(file, body);
+    const userId = req.user as string;
+
+    return this.artService.create(file, body, userId);
   }
 
   @Get()
-  findUsers() {
-    return this.artService.findUsers();
+  fetch(
+    @Query('page', new ParseIntPipe()) page: number = 1,
+    @Query('limit', new ParseIntPipe()) limit: number = 4,
+    @Query('search') search?: string,
+  ) {
+    return this.artService.fetch(page, limit, search);
   }
 
   @Get(':id')
@@ -47,8 +51,14 @@ export class ArtController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateArtDto: Prisma.ArtUpdateInput) {
-    return this.artService.update(id, updateArtDto);
+  @UseInterceptors(FileInterceptor('file'))
+  @UseGuards(JwtAuthGaurd)
+  update(
+    @Param('id') id: string,
+    @Body() body: UpdateArtDto,
+    @UploadedFile() file?: Express.Multer.File,
+  ) {
+    return this.artService.update(id, body, file);
   }
 
   @Delete(':id')

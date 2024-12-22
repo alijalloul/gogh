@@ -12,16 +12,37 @@ export class SupabaseService {
     this.supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   }
 
-  public async getUsers() {
-    return this.supabase.from('users').select('*');
+  public async uploadFile(fileName: string, file: Buffer) {
+    return this.supabase.storage.from('art').upload(fileName, file, {
+      cacheControl: '3600',
+      upsert: false,
+      contentType: 'image/*',
+    });
   }
 
-  public async uploadFile(
-    bucket: string,
-    path: string,
-    file: Buffer,
-    options: any,
-  ) {
-    return this.supabase.storage.from(bucket).upload(path, file, options);
+  public async updateFile(oldName: string, newName: string, file: Buffer) {
+    const { data, error: uploadError } = await this.supabase.storage
+      .from('art')
+      .upload(newName, file, {
+        cacheControl: '3600',
+        upsert: false,
+        contentType: 'image/*',
+      });
+
+    if (uploadError) {
+      return { data: data, error: uploadError };
+    } else {
+      const { error: deleteError } = await this.supabase.storage
+        .from('art')
+        .remove([oldName]);
+
+      return { data, error: deleteError };
+    }
+  }
+
+  public async deleteFile(name: string) {
+    const { error } = await this.supabase.storage.from('art').remove([name]);
+
+    return { error };
   }
 }

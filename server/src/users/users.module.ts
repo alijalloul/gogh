@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { SupabaseService } from 'src/supabase/supabase.service';
-import { LocalStrategy } from './strategies/local.strategy';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 
@@ -12,6 +11,6 @@ import { UsersService } from './users.service';
     JwtModule.register({ secret: process.env.JWT_SECRET }),
   ],
   controllers: [UsersController],
-  providers: [UsersService, SupabaseService, LocalStrategy],
+  providers: [UsersService, SupabaseService],
 })
 export class UsersModule {}
