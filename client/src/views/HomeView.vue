@@ -9,8 +9,8 @@ const { user } = storeToRefs(useUserStore());
 </script>
 
 <template>
-  <div className="w-screen h-screen flex justify-center items-center">
-    <div className="flex flex-col items-center space-y-5">
+  <div class="w-screen h-screen flex justify-center items-center">
+    <div class="flex flex-col items-center space-y-5">
       <span class="text-2xl font-semibold">
         {{
           isLoggedIn
@@ -19,16 +19,16 @@ const { user } = storeToRefs(useUserStore());
         }}
       </span>
 
-      <div className="flex space-x-4">
+      <div class="flex space-x-4">
         <RouterLink
           to="/signup"
-          className="text-3xl border rounded-xl px-6 py-4 hover:bg-gray-400 active:bg-gray-500 transition-all duration-300 hover:cursor-pointer"
+          class="text-3xl border rounded-xl px-6 py-4 hover:bg-gray-400 active:bg-gray-500 transition-all duration-300 hover:cursor-pointer"
           >Signup</RouterLink
         >
 
         <RouterLink
           to="/login"
-          className="text-3xl border rounded-xl px-6 py-4 hover:bg-gray-400 active:bg-gray-500 transition-all duration-300 hover:cursor-pointer"
+          class="text-3xl border rounded-xl px-6 py-4 hover:bg-gray-400 active:bg-gray-500 transition-all duration-300 hover:cursor-pointer"
           >Login</RouterLink
         >
       </div>

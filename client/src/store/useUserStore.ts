@@ -1,6 +1,8 @@
 import { BASE_URL } from "@/utils/getBaseUrl";
 import { defineStore } from "pinia";
 
+import router from "@/router";
+
 interface User {
   id: string;
   firstName: string;
@@ -17,6 +19,27 @@ export const useUserStore = defineStore("user", {
   }),
 
   actions: {
+    async fetchUser() {
+      try {
+        const res = await fetch(`${BASE_URL}/api/users/me`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          this.user = data;
+        } else {
+          throw new Error(data.message || "Login failed");
+        }
+      } catch (error: any) {
+        console.error("Login Error:", error.message);
+      }
+    },
+
     async login(email: string, password: string) {
       try {
         const res = await fetch(`${BASE_URL}/api/users/login`, {
@@ -31,6 +54,8 @@ export const useUserStore = defineStore("user", {
         if (res.ok) {
           this.user = data.user;
           localStorage.setItem("token", data.token);
+
+          router.push("/");
         } else {
           throw new Error(data.message || "Login failed");
         }
@@ -61,8 +86,10 @@ export const useUserStore = defineStore("user", {
         const data = await res.json();
 
         if (res.ok) {
+          this.user = data.user;
           localStorage.setItem("token", data.token);
-          console.log("Signup Success:", data);
+
+          router.push("/");
         } else {
           throw new Error(data.message || "Signup failed");
         }
@@ -74,6 +101,8 @@ export const useUserStore = defineStore("user", {
     logout() {
       this.user = null;
       localStorage.removeItem("token");
+
+      router.push("/");
     },
   },
 });

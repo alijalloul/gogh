@@ -26,7 +26,7 @@ const handleSignup = async () => {
       <span class="text-3xl font-medium">Signup</span>
 
       <form @submit.prevent="handleSignup" class="flex flex-col space-y-5">
-        <div className="flex justify-between items-center space-x-2">
+        <div class="flex justify-between items-center space-x-2">
           <div class="w-1/2 flex flex-col space-y-2">
             <span>First Name</span>
             <input
