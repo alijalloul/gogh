@@ -1,14 +1,29 @@
-import { Body, Controller, Delete, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { SupabaseService } from 'src/supabase/supabase.service';
+import { Request } from 'express';
+import { JwtAuthGaurd } from 'src/auth/guards/jwt.guard';
 import { UsersService } from './users.service';
 
 @Controller('users')
 export class UsersController {
-  constructor(
-    private readonly usersService: UsersService,
-    private readonly supabaseService: SupabaseService,
-  ) {}
+  constructor(private readonly usersService: UsersService) {}
+
+  @Get('me')
+  @UseGuards(JwtAuthGaurd)
+  fetchUser(@Req() req: Request) {
+    const userId = req.user as string;
+    return this.usersService.fetchUser(userId);
+  }
 
   @Post('signup')
   signup(@Body() body: Prisma.UserCreateInput) {

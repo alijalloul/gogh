@@ -16,6 +16,13 @@ export class UsersService {
     private readonly jwtService: JwtService,
   ) {}
 
+  fetchUser(id: string) {
+    return this.dbService.user.findUnique({
+      where: { id },
+      select: { id: true, firstName: true, lastName: true, email: true },
+    });
+  }
+
   async signup(body: Prisma.UserCreateInput) {
     const user = await this.dbService.user.findUnique({
       where: { email: body.email },

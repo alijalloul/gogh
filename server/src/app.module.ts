@@ -8,6 +8,7 @@ import { ArtModule } from './art/art.module';
 import { DbModule } from './db/db.module';
 import { SupabaseModule } from './supabase/supabase.module';
 import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { UsersModule } from './users/users.module';
         limit: 10,
       },
     ]),
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [

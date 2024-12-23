@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
+import { AuthModule } from 'src/auth/auth.module';
 import { ArtController } from './art.controller';
 import { ArtService } from './art.service';
-import { JwtStrategy } from './strategies/jwt.strategy';
 
 @Module({
+  imports: [AuthModule],
   controllers: [ArtController],
-  providers: [ArtService, JwtStrategy],
+  providers: [ArtService],
 })
 export class ArtModule {}
