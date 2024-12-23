@@ -59,7 +59,7 @@ const resumeAnimation = () => {
       class="item"
     >
       <div
-        class="w-72 aspect-[3/5] bg-gray-300 rounded-lg flex justify-center items-center"
+        class="w-72 aspect-[3/5] bg-gray-300 rounded-lg flex justify-center items-center hover:bg-gray-200 active:bg-gray-100 transition-all duration-300 hover:cursor-pointer"
       >
         {{ item }}
       </div>
