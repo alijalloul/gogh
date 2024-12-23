@@ -63,13 +63,22 @@ const handleSignup = async () => {
           />
         </div>
 
-        <div class="w-full flex justify-start items-center">
+        <div class="w-full flex justify-between items-center">
           <button
             type="submit"
             class="text-white bg-indigo-600 px-4 py-3 rounded-lg hover:bg-indigo-500 active:bg-indigo-400 hover:cursor-pointer transition-all duration-300"
           >
             Signup
           </button>
+
+          <div>
+            <span>Already have an account? </span>
+            <RouterLink
+              to="/login"
+              class="text-indigo-600 hover:underline hover:cursor-pointer"
+              >Log in</RouterLink
+            >
+          </div>
         </div>
       </form>
     </div>
