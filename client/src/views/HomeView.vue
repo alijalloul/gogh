@@ -42,10 +42,10 @@ watch(isView, (value) => {
 
 <template>
   <div
-    class="absolute top-0 left-0 w-full h-screen flex justify-center items-center overflow-hidden"
+    class="absolute top-0 left-0 w-screen h-screen flex justify-center items-center overflow-hidden"
   >
     <div
-      class="overlay z-20 flex justify-center items-center absolute top-0 left-0 w-full h-screen bg-black bg-opacity-70"
+      class="overlay w-full h-full z-20 flex justify-center items-center absolute top-0 left-0 bg-black bg-opacity-70"
     >
       <div class="flex justify-between items-center space-x-4">
         <button

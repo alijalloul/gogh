@@ -28,7 +28,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="w-full h-full px-16 py-4">
+  <div class="flex-1 min-h-0 w-full h-full px-16 py-4">
     <div class="w-full h-full rounded-xl relative overflow-hidden">
       <img
         :src="art?.imageUrl"

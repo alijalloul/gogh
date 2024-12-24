@@ -51,7 +51,7 @@ const handleCreateArt = async () => {
 </script>
 
 <template>
-  <div class="w-screen h-screen flex justify-center items-center">
+  <div class="w-screen flex justify-center items-center">
     <div
       class="w-[90%] lg:w-2/5 border rounded-lg p-5 flex flex-col space-y-5 shadow-lg shadow-gray-600"
     >
