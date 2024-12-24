@@ -1,0 +1,14 @@
+{
+    "version": 1,
+    "builds": [{
+        "src": "server/main.ts",
+        "use": "@vercel/node"
+    }],
+    "routes":[
+        {
+            "src": "/api/(.*)",
+            "dest": "server/main.ts",
+            "methdos": ["GET", "POST", "PUT", "DELETE"]
+        }
+    ]
+}
