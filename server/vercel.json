@@ -7,8 +7,7 @@
     "routes":[
         {
             "src": "/api/(.*)",
-            "dest": "server/main.ts",
-            "methdos": ["GET", "POST", "PUT", "DELETE"]
+            "dest": "server/main.ts"
         }
     ]
 }
