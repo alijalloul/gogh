@@ -19,10 +19,14 @@ export class UsersService {
   async fetchUser(id: string) {
     const user = await this.dbService.user.findUnique({
       where: { id },
-      select: { id: true, firstName: true, lastName: true, email: true },
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        email: true,
+        art: true,
+      },
     });
-
-    console.log('user with id ', id, ' is: ', user);
     return user;
   }
 

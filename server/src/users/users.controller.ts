@@ -26,7 +26,7 @@ export class UsersController {
   }
 
   @Get(':id')
-  fetchUser(@Param() id: string) {
+  fetchUser(@Param('id') id: string) {
     return this.usersService.fetchUser(id);
   }
 

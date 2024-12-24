@@ -32,11 +32,6 @@ export class ArtController {
     return this.artService.fetch(page, limit, search);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.artService.findOne(id);
-  }
-
   @Post()
   @UseInterceptors(FileInterceptor('file'))
   @UseGuards(JwtAuthGaurd)
@@ -48,6 +43,11 @@ export class ArtController {
     const userId = req.user as string;
 
     return this.artService.create(file, body, userId);
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.artService.findOne(id);
   }
 
   @Patch(':id')
