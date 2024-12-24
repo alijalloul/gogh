@@ -4,7 +4,7 @@
       "src": "dist/main.js",
       "use": "@vercel/node",
       "config": {
-        "buildCommand": "npm run vercel-build"
+        "buildCommand": "npm run postinstall"
       }
   }],
   "routes": [
