@@ -30,8 +30,6 @@ export const useUserStore = defineStore("user", {
 
         const data = await res.json();
 
-        console.log("data: ", data);
-
         if (res.ok) {
           this.user = data;
         } else {

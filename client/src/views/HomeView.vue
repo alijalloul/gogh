@@ -17,8 +17,6 @@ const isView = ref(false);
 
 if (art.value === null) {
   useArtStore().fetchArt(1, 16);
-} else {
-  console.log("art: ", art.value);
 }
 
 watch(isView, (value) => {

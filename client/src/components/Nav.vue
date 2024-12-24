@@ -1,29 +1,30 @@
-<script>
+<script setup lang="ts">
 import { gsap } from "gsap";
+import { onMounted, ref } from "vue";
 import { RouterLink } from "vue-router";
 
-export default {
-  mounted() {
-    const tl = gsap.timeline();
+const isLoggedIn = ref(localStorage.getItem("token") !== null);
 
-    tl.to(".header_container", {
-      opacity: 1,
-      duration: 1,
+onMounted(() => {
+  const tl = gsap.timeline();
+
+  tl.to(".header_container", {
+    opacity: 1,
+    duration: 1,
+    ease: "power4.inOut",
+  });
+
+  tl.to(
+    ".title",
+    {
+      width: 0,
+      duration: 0.5,
+      delay: 1,
       ease: "power4.inOut",
-    });
-
-    tl.to(
-      ".title",
-      {
-        width: 0,
-        duration: 0.5,
-        delay: 1,
-        ease: "power4.inOut",
-      },
-      "<"
-    );
-  },
-};
+    },
+    "<"
+  );
+});
 </script>
 
 <template>
@@ -46,13 +47,19 @@ export default {
       </RouterLink>
     </div>
 
-    <div >
-   
-
+    <div>
       <RouterLink
+        v-if="!isLoggedIn"
         to="/login"
         class="text-3xl rounded-xl px-6 py-3 text-white bg-black hover:bg-gray-900 active:bg-gray-800 transition-all duration-300 hover:cursor-pointer"
         >Login</RouterLink
+      >
+
+      <RouterLink
+        v-if="isLoggedIn"
+        to="/login"
+        class="text-3xl rounded-xl px-6 py-3 text-white bg-black hover:bg-gray-900 active:bg-gray-800 transition-all duration-300 hover:cursor-pointer"
+        >Profile</RouterLink
       >
     </div>
   </header>
