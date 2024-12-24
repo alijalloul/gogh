@@ -49,7 +49,7 @@ export default {
     <div class="flex space-x-4">
       <RouterLink
         to="/create"
-        class="text-3xl rounded-xl px-6 py-3 text-white border bg-white hover:bg-gray-100 active:bg-gray-200 transition-all duration-300 hover:cursor-pointer"
+        class="text-3xl rounded-xl px-6 py-3  border bg-white hover:bg-gray-100 active:bg-gray-200 transition-all duration-300 hover:cursor-pointer"
         >Create</RouterLink
       >
 
