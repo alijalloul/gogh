@@ -16,11 +16,14 @@ export class UsersService {
     private readonly jwtService: JwtService,
   ) {}
 
-  fetchUser(id: string) {
-    return this.dbService.user.findUnique({
+  async fetchUser(id: string) {
+    const user = await this.dbService.user.findUnique({
       where: { id },
       select: { id: true, firstName: true, lastName: true, email: true },
     });
+
+    console.log('user with id ', id, ' is: ', user);
+    return user;
   }
 
   fetchUsers() {
