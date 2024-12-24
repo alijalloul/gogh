@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import router from "@/router";
 import { gsap } from "gsap";
 import { onMounted, ref, watch } from "vue";
 
@@ -22,6 +23,9 @@ const props = withDefaults(
   }
 );
 const windowHeight = ref(window.innerHeight);
+
+const dragginThreshold = 20;
+const isMouseDown = ref(false);
 
 const lastYpercent = ref(0);
 const initialMouseY = ref(0);
@@ -55,7 +59,7 @@ watch(
 
 watch(deltaMouseY, (newValue) => {
   gsap.to(containerRef.value, {
-    yPercent: lastYpercent.value + (newValue / windowHeight.value) * 50,
+    yPercent: lastYpercent.value + (newValue / windowHeight.value) * 25,
     duration: 0.1,
   });
 });
@@ -73,17 +77,29 @@ const resumeAnimation = () => {
 };
 
 const handleMouseDown = (e: any) => {
-  isDragging.value = true;
+  isMouseDown.value = true;
   initialMouseY.value = e.clientY;
   lastYpercent.value =
     (gsap.getProperty(containerRef.value, "yPercent") as number) || 0;
 };
 const handleMouseMove = (e: any) => {
+  if (!isMouseDown.value) return;
+
+  if (
+    !isDragging.value &&
+    Math.abs(e.clientY - initialMouseY.value) > dragginThreshold
+  ) {
+    console.log("isDragging: ");
+    isDragging.value = true;
+  }
+
   if (!isDragging.value) return;
 
   deltaMouseY.value = e.clientY - initialMouseY.value;
 };
-const handleMouseUp = (e: any) => {
+const handleMouseUp = (artId?: string) => {
+  const wasDragging = isDragging.value;
+  isMouseDown.value = false;
   isDragging.value = false;
 
   const currentY =
@@ -93,6 +109,11 @@ const handleMouseUp = (e: any) => {
   tl.progress(progress);
 
   initialMouseY.value = 0;
+
+  console.log("wasDraggin: ", wasDragging, " | ", "artId: ", artId);
+  if (!wasDragging && artId) {
+    router.push({ name: "art", params: { id: artId } });
+  }
 };
 </script>
 
@@ -107,29 +128,26 @@ const handleMouseUp = (e: any) => {
     @mouseleave="resumeAnimation"
     @mousedown="handleMouseDown"
     @mousemove="handleMouseMove"
-    @mouseup="handleMouseUp"
+    @mouseup="() => handleMouseUp()"
   >
     <div
       v-for="(item, index) in [...items, ...items]"
       :key="item.id"
-      class="item"
+      @mouseup="() => handleMouseUp(item.id)"
+      class="item relative overflow-hidden w-72 aspect-[3/5] rounded-lg hover:cursor-pointer"
     >
       <div
-        class="relative overflow-hidden w-72 aspect-[3/5] rounded-lg hover:cursor-pointer"
+        class="opacity-0 hover:opacity-100 absolute z-10 top-0 left-0 w-full h-full bg-black bg-opacity-50 text-white p-2 transition-all"
       >
-        <div
-          class="opacity-0 hover:opacity-100 absolute z-10 top-0 left-0 w-full h-full bg-black bg-opacity-50 text-white p-2 transition-all"
-        >
-          <h1 class="text-xl font-bold">{{ item.title }}</h1>
-          <p class="text-sm">{{ item.desc }}</p>
-        </div>
-
-        <img
-          :src="item.imageUrl"
-          :alt="item.title"
-          class="w-full h-full object-cover"
-        />
+        <h1 class="text-xl font-bold">{{ item.title }}</h1>
+        <p class="text-sm">{{ item.desc }}</p>
       </div>
+
+      <img
+        :src="item.imageUrl"
+        :alt="item.title"
+        class="w-full h-full object-cover"
+      />
     </div>
   </div>
 </template>

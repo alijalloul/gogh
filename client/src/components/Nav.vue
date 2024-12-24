@@ -1,9 +1,12 @@
 <script setup lang="ts">
+import { useUserStore } from "@/store/useUserStore";
 import { gsap } from "gsap";
+import { storeToRefs } from "pinia";
 import { onMounted, ref } from "vue";
 import { RouterLink } from "vue-router";
 
 const isLoggedIn = ref(localStorage.getItem("token") !== null);
+const { user } = storeToRefs(useUserStore());
 
 onMounted(() => {
   const tl = gsap.timeline();
@@ -29,7 +32,7 @@ onMounted(() => {
 
 <template>
   <header
-    class="absolute z-30 w-full flex justify-between items-center top-5 px-12"
+    class="relative z-30 w-full flex justify-between items-center py-5 px-12"
   >
     <div
       class="header_container flex justify-center items-center space-x-2 opacity-0"
@@ -56,8 +59,8 @@ onMounted(() => {
       >
 
       <RouterLink
-        v-if="isLoggedIn"
-        to="/login"
+        v-if="isLoggedIn && user?.id"
+        :to="{ name: 'users', params: { id: user.id } }"
         class="text-3xl rounded-xl px-6 py-3 text-white bg-black hover:bg-gray-900 active:bg-gray-800 transition-all duration-300 hover:cursor-pointer"
         >Profile</RouterLink
       >
