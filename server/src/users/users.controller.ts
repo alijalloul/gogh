@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { Request } from 'express';
-import { JwtAuthGaurd } from 'src/auth/guards/jwt.guard';
+import { JwtAuthGaurd } from '../auth/guards/jwt.guard';
 import { UsersService } from './users.service';
 
 @Controller('users')

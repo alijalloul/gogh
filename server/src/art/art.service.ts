@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import * as crypto from 'crypto';
-import { SupabaseService } from 'src/supabase/supabase.service';
 import { DbService } from '../db/db.service';
+import { SupabaseService } from '../supabase/supabase.service';
 import { UpdateArtDto } from './dto/updateArtDto';
 
 @Injectable()

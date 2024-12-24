@@ -15,7 +15,7 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Request } from 'express';
-import { JwtAuthGaurd } from 'src/auth/guards/jwt.guard';
+import { JwtAuthGaurd } from '../auth/guards/jwt.guard';
 import { ArtService } from './art.service';
 import { UpdateArtDto } from './dto/updateArtDto';
 

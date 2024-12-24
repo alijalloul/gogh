@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { AuthModule } from 'src/auth/auth.module';
-import { SupabaseService } from 'src/supabase/supabase.service';
+import { AuthModule } from '../auth/auth.module';
+import { SupabaseService } from '../supabase/supabase.service';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 
