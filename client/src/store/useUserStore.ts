@@ -24,11 +24,13 @@ export const useUserStore = defineStore("user", {
         const res = await fetch(`${BASE_URL}/api/users/me`, {
           method: "GET",
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         });
 
         const data = await res.json();
+
+        console.log("data: ", data);
 
         if (res.ok) {
           this.user = data;

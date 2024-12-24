@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { gsap } from "gsap";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 
 interface Art {
   id: string;
@@ -15,6 +15,7 @@ const props = withDefaults(
     items: Art[];
     isInverse?: boolean;
     position: number;
+    isPlaying: boolean;
   }>(),
   {
     isInverse: false,
@@ -31,12 +32,19 @@ onMounted(() => {
     repeat: -1,
     defaults: { ease: "none", overwrite: "auto" },
   });
+  
+  tl.pause();
 
   tl.to(containerRef.value, {
     yPercent: direction,
     duration: 10,
   });
 });
+
+watch(() => props.isPlaying, (newValue) => {
+  newValue ? tl.play() : tl.pause();
+});
+
 
 const stopAnimation = () => {
   if (tl) {

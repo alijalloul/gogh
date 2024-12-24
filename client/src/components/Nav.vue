@@ -28,13 +28,13 @@ export default {
 
 <template>
   <header
-    class="absolute z-10 w-full flex justify-between items-center top-5 px-12"
+    class="absolute z-30 w-full flex justify-between items-center top-5 px-12"
   >
     <div
       class="header_container flex justify-center items-center space-x-2 opacity-0"
     >
       <div class="title overflow-hidden h-20" ref="title">
-        <h1 class="text-6xl font-medium">Gogh</h1>
+        <h1 class="text-6xl font-medium text-white">Gogh</h1>
       </div>
 
       <RouterLink to="/">
@@ -46,12 +46,8 @@ export default {
       </RouterLink>
     </div>
 
-    <div class="flex space-x-4">
-      <RouterLink
-        to="/create"
-        class="text-3xl rounded-xl px-6 py-3  border bg-white hover:bg-gray-100 active:bg-gray-200 transition-all duration-300 hover:cursor-pointer"
-        >Create</RouterLink
-      >
+    <div >
+   
 
       <RouterLink
         to="/login"
