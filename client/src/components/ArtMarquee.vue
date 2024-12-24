@@ -2,9 +2,17 @@
 import { gsap } from "gsap";
 import { onMounted, ref } from "vue";
 
+interface Art {
+  id: string;
+  title: string;
+  desc: string;
+  imageUrl: string;
+  createdAt: Date;
+}
+
 const props = withDefaults(
   defineProps<{
-    items: string[];
+    items: Art[];
     isInverse?: boolean;
     position: number;
   }>(),
@@ -59,9 +67,20 @@ const resumeAnimation = () => {
       class="item"
     >
       <div
-        class="w-72 aspect-[3/5] bg-gray-300 rounded-lg flex justify-center items-center hover:bg-gray-200 active:bg-gray-100 transition-all duration-300 hover:cursor-pointer"
+        class="relative overflow-hidden w-72 aspect-[3/5] rounded-lg hover:cursor-pointer"
       >
-        {{ item }}
+        <div
+          class="opacity-0 hover:opacity-100 absolute z-10 top-0 left-0 w-full h-full bg-black bg-opacity-50 text-white p-2 transition-all"
+        >
+          <h1 class="text-xl font-bold">{{ item.title }}</h1>
+          <p class="text-sm">{{ item.desc }}</p>
+        </div>
+
+        <img
+          :src="item.imageUrl"
+          :alt="item.title"
+          class="w-full h-full object-cover"
+        />
       </div>
     </div>
   </div>

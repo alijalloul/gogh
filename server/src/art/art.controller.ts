@@ -23,6 +23,20 @@ import { UpdateArtDto } from './dto/updateArtDto';
 export class ArtController {
   constructor(private readonly artService: ArtService) {}
 
+  @Get()
+  fetch(
+    @Query('page', new ParseIntPipe()) page: number,
+    @Query('limit', new ParseIntPipe()) limit: number,
+    @Query('search') search?: string,
+  ) {
+    return this.artService.fetch(page, limit, search);
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.artService.findOne(id);
+  }
+
   @Post()
   @UseInterceptors(FileInterceptor('file'))
   @UseGuards(JwtAuthGaurd)
@@ -34,20 +48,6 @@ export class ArtController {
     const userId = req.user as string;
 
     return this.artService.create(file, body, userId);
-  }
-
-  @Get()
-  fetch(
-    @Query('page', new ParseIntPipe()) page: number = 1,
-    @Query('limit', new ParseIntPipe()) limit: number = 4,
-    @Query('search') search?: string,
-  ) {
-    return this.artService.fetch(page, limit, search);
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.artService.findOne(id);
   }
 
   @Patch(':id')

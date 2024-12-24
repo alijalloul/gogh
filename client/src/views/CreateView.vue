@@ -9,6 +9,10 @@ const file = ref<File | null>(null);
 
 const token = localStorage.getItem("token");
 
+if (!token) {
+  router.push("/login");
+}
+
 const handleFileUpload = (event: Event) => {
   const target = event.target as HTMLInputElement;
   if (target.files && target.files[0]) {
@@ -39,8 +43,6 @@ const handleCreateArt = async () => {
     if (res.ok) {
       const data = await res.json();
       console.log("Upload Success:", data);
-
-      router.push("/");
     }
   } catch (error) {
     console.error("Upload failed:", error);
@@ -53,11 +55,11 @@ const handleCreateArt = async () => {
     <div
       class="w-[90%] lg:w-2/5 border rounded-lg p-5 flex flex-col space-y-5 shadow-lg shadow-gray-600"
     >
-      <span class="text-3xl font-medium">Login</span>
+      <span class="text-3xl font-medium">Create Art</span>
 
       <form @submit.prevent="handleCreateArt" class="flex flex-col space-y-5">
         <div class="flex flex-col space-y-2">
-          <span>Create Art</span>
+          <span>Titile</span>
 
           <input
             v-model="title"

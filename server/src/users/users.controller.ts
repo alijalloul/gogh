@@ -20,9 +20,19 @@ export class UsersController {
 
   @Get('me')
   @UseGuards(JwtAuthGaurd)
-  fetchUser(@Req() req: Request) {
+  fetchMe(@Req() req: Request) {
     const userId = req.user as string;
     return this.usersService.fetchUser(userId);
+  }
+
+  @Get(':id')
+  fetchUser(@Param() id: string) {
+    return this.usersService.fetchUser(id);
+  }
+
+  @Get('')
+  fetchUsers(@Param() id: string) {
+    return this.usersService.fetchUsers();
   }
 
   @Post('signup')
