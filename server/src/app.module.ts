@@ -7,6 +7,7 @@ import { AppService } from './app.service';
 import { ArtModule } from './art/art.module';
 import { AuthModule } from './auth/auth.module';
 import { DbModule } from './db/db.module';
+import { LikesModule } from './likes/likes.module';
 import { SupabaseModule } from './supabase/supabase.module';
 import { UsersModule } from './users/users.module';
 
@@ -24,6 +25,7 @@ import { UsersModule } from './users/users.module';
       },
     ]),
     AuthModule,
+    LikesModule,
   ],
   controllers: [AppController],
   providers: [

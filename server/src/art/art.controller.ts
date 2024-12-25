@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Headers,
   Param,
   ParseIntPipe,
   Patch,
@@ -15,6 +16,7 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Request } from 'express';
+import * as jwt from 'jsonwebtoken';
 import { JwtAuthGaurd } from '../auth/guards/jwt.guard';
 import { ArtService } from './art.service';
 import { UpdateArtDto } from './dto/updateArtDto';
@@ -28,8 +30,25 @@ export class ArtController {
     @Query('page', new ParseIntPipe()) page: number,
     @Query('limit', new ParseIntPipe()) limit: number,
     @Query('search') search?: string,
+    @Headers('authorization') auth?: string,
   ) {
-    return this.artService.fetch(page, limit, search);
+    let userId = null;
+
+    if (auth && auth.startsWith('Bearer ')) {
+      try {
+        const token = auth.split(' ')[1];
+        const decoded = jwt.verify(
+          token,
+          process.env.JWT_SECRET,
+        ) as jwt.JwtPayload;
+        console.log('decoded: ', decoded);
+        userId = decoded.id;
+      } catch (error) {
+        console.error('Invalid token:', error);
+      }
+    }
+
+    return this.artService.fetch(page, limit, search, userId);
   }
 
   @Post()
