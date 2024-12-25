@@ -21,7 +21,7 @@ const handleSignup = async () => {
 <template>
   <div class="flex-1 min-h-0 w-screen flex justify-center items-center">
     <div
-      class="w-[90%] lg:w-2/5 border rounded-lg p-5 flex flex-col space-y-5 shadow-lg shadow-gray-600"
+      class="w-[90%] lg:w-2/5 border border-gray-500 rounded-lg p-5 flex flex-col space-y-5 shadow-lg shadow-gray-600"
     >
       <span class="text-3xl font-medium">Signup</span>
 

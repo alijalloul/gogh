@@ -2,7 +2,7 @@
 import type { UserDto } from "@/Dto/userDto";
 import { BASE_URL } from "@/utils/getBaseUrl";
 import { onMounted, ref } from "vue";
-import { useRoute } from "vue-router";
+import { RouterLink, useRoute } from "vue-router";
 
 const route = useRoute();
 const userId = route.params.id as string;
@@ -39,22 +39,32 @@ onMounted(() => {
       />
     </button>
 
-    <div class="relative -translate-y-1/2 h-60 flex items-end space-x-4 mx-16">
-      <button
-        class="h-full aspect-square rounded-full bg-gray-300 border-2 border-black"
-      >
-        <img
-          src="/images/Bully.jpeg"
-          alt="profile.png"
-          class="w-full h-full object-cover rounded-full"
-        />
-      </button>
+    <div
+      class="relative w-full -translate-y-1/2 h-60 flex justify-between items-end px-16"
+    >
+      <div class="flex items-end space-x-4 h-full">
+        <button
+          class="h-full aspect-square rounded-full bg-gray-300 border-2 border-black"
+        >
+          <img
+            src="/images/Bully.jpeg"
+            alt="profile.png"
+            class="w-full h-full object-cover rounded-full"
+          />
+        </button>
 
-      <div class="h-1/2 flex justify-center items-center">
-        <span class="text-5xl font-medium">{{
-          `${user?.firstName} ${user?.lastName}`
-        }}</span>
+        <div class="h-1/2 flex justify-center items-center">
+          <span class="text-5xl font-medium">{{
+            `${user?.firstName} ${user?.lastName}`
+          }}</span>
+        </div>
       </div>
+
+      <RouterLink
+        to="/create"
+        class="text-3xl rounded-xl px-6 py-3 border border-gray-500 bg-white hover:bg-gray-200 active:bg-gray-300 transition-all duration-300 hover:cursor-pointer"
+        >Create</RouterLink
+      >
     </div>
 
     <div

@@ -58,10 +58,24 @@ watch(
 );
 
 watch(deltaMouseY, (newValue) => {
-  gsap.to(containerRef.value, {
-    yPercent: lastYpercent.value + (newValue / windowHeight.value) * 25,
-    duration: 0.1,
-  });
+  const newYpercent = lastYpercent.value + (newValue / windowHeight.value) * 25;
+  const totalDistance = props.isInverse ? 50 : -50;
+
+  if (props.isInverse) {
+    if (newYpercent > 1 && newYpercent < 49) {
+      gsap.to(containerRef.value, {
+        yPercent: newYpercent,
+        duration: 0.1,
+      });
+    }
+  } else {
+    if (newYpercent < -1 && newYpercent > -49) {
+      gsap.to(containerRef.value, {
+        yPercent: newYpercent,
+        duration: 0.1,
+      });
+    }
+  }
 });
 
 const stopAnimation = () => {
@@ -106,11 +120,11 @@ const handleMouseUp = (artId?: string) => {
     (gsap.getProperty(containerRef.value, "yPercent") as number) || 0;
   const totalDistance = props.isInverse ? 50 : -50;
   const progress = Math.abs(currentY / totalDistance);
+
   tl.progress(progress);
 
   initialMouseY.value = 0;
 
-  console.log("wasDraggin: ", wasDragging, " | ", "artId: ", artId);
   if (!wasDragging && artId) {
     router.push({ name: "art", params: { id: artId } });
   }

@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
-    "types": ["node", "react", "react-dom"]
+    "types": ["node", "react", "react-dom"],
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
   },
   "files": [],
   "references": [

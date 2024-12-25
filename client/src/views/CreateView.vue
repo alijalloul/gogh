@@ -6,8 +6,14 @@ import { ref } from "vue";
 const title = ref("");
 const desc = ref("");
 const file = ref<File | null>(null);
+const previewUrl = ref<string | null>(null);
+const fileInput = ref<HTMLInputElement | null>(null);
 
 const token = localStorage.getItem("token");
+
+const triggerFileInput = () => {
+  fileInput.value?.click();
+};
 
 if (!token) {
   router.push("/login");
@@ -17,6 +23,7 @@ const handleFileUpload = (event: Event) => {
   const target = event.target as HTMLInputElement;
   if (target.files && target.files[0]) {
     file.value = target.files[0];
+    previewUrl.value = URL.createObjectURL(file.value);
   }
 };
 
@@ -53,42 +60,57 @@ const handleCreateArt = async () => {
 <template>
   <div class="flex-1 min-h-0 w-screen flex justify-center items-center">
     <div
-      class="w-[90%] lg:w-2/5 border rounded-lg p-5 flex flex-col space-y-5 shadow-lg shadow-gray-600"
+      class="w-[90%] h-full rounded-lg flex justify-between p-5 flex-col space-y-5"
     >
-      <span class="text-3xl font-medium">Create Art</span>
+      <div class="h-[80%] flex justify-between items-center">
+        <div class="h-full w-2/5 flex flex-col space-y-5">
+          <div class="flex flex-col space-y-2">
+            <span>Title</span>
 
-      <form @submit.prevent="handleCreateArt" class="flex flex-col space-y-5">
-        <div class="flex flex-col space-y-2">
-          <span>Titile</span>
+            <input
+              v-model="title"
+              type="text"
+              class="w-full p-2 border border-gray-500 rounded-md outline-none"
+            />
+          </div>
 
+          <div class="flex-1 flex flex-col space-y-2">
+            <span>Description</span>
+
+            <textarea
+              v-model="desc"
+              class="flex-1 w-full p-2 border border-gray-500 rounded-md outline-none"
+            ></textarea>
+          </div>
+        </div>
+
+        <div
+          @click="triggerFileInput"
+          class="h-full overflow-hidden aspect-[3/5] rounded-lg bg-gray-300 hover:cursor-pointer"
+        >
+          <img
+            v-if="previewUrl"
+            :src="previewUrl"
+            :alt="file?.name"
+            class="w-full h-full object-cover"
+          />
           <input
-            v-model="title"
-            type="text"
-            class="w-full p-2 border rounded-md outline-none"
+            ref="fileInput"
+            type="file"
+            @change="handleFileUpload"
+            class="hidden"
           />
         </div>
-        <div class="flex flex-col space-y-2">
-          <span>Description</span>
-          <input
-            v-model="desc"
-            type="text"
-            class="w-full p-2 border rounded-md outline-none"
-          />
-        </div>
+      </div>
 
-        <div>
-          <input type="file" @change="handleFileUpload" />
-        </div>
-
-        <div class="w-full flex justify-start items-center">
-          <button
-            type="submit"
-            class="text-white bg-indigo-600 px-4 py-3 rounded-lg hover:bg-indigo-500 active:bg-indigo-400 hover:cursor-pointer transition-all duration-300"
-          >
-            Create
-          </button>
-        </div>
-      </form>
+      <div class="w-full flex justify-end items-center">
+        <button
+          @click="handleCreateArt"
+          class="text-white bg-indigo-600 px-4 py-3 rounded-lg hover:bg-indigo-500 active:bg-indigo-400 hover:cursor-pointer transition-all duration-300"
+        >
+          Create
+        </button>
+      </div>
     </div>
   </div>
 </template>
