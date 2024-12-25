@@ -84,7 +84,10 @@ export class ArtService {
   }
 
   async findOne(id: string) {
-    const art = await this.dbService.art.findUnique({ where: { id } });
+    const art = await this.dbService.art.findUnique({
+      where: { id },
+      include: { User: { select: { firstName: true, lastName: true } } },
+    });
 
     if (!art) {
       throw new HttpException(
@@ -93,7 +96,7 @@ export class ArtService {
       );
     }
 
-    return this.dbService.art.findUnique({ where: { id } });
+    return art;
   }
 
   async update(id: string, body: UpdateArtDto, file: Express.Multer.File) {
