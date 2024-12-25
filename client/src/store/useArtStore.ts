@@ -1,16 +1,9 @@
+import type { ArtDto } from "@/Dto/artDto";
 import { BASE_URL } from "@/utils/getBaseUrl";
 import { defineStore } from "pinia";
 
-interface Art {
-  id: string;
-  title: string;
-  desc: string;
-  imageUrl: string;
-  createdAt: Date;
-}
-
 interface AppState {
-  art: Art[] | null;
+  art: ArtDto[] | null;
   total: number | null;
 }
 
@@ -27,6 +20,9 @@ export const useArtStore = defineStore("art", {
           `${BASE_URL}/api/art?page=${page}&limit=${limit}&search=${search}`,
           {
             method: "GET",
+            headers: {
+              authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
           }
         );
 

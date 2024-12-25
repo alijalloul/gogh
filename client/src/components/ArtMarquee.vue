@@ -1,19 +1,16 @@
 <script setup lang="ts">
+import type { ArtDto } from "@/Dto/artDto";
 import router from "@/router";
+import { BASE_URL } from "@/utils/getBaseUrl";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { gsap } from "gsap";
 import { onMounted, ref, watch } from "vue";
 
-interface Art {
-  id: string;
-  title: string;
-  desc: string;
-  imageUrl: string;
-  createdAt: Date;
-}
+const token = localStorage.getItem("token");
 
 const props = withDefaults(
   defineProps<{
-    items: Art[];
+    items: ArtDto[];
     isInverse?: boolean;
     position: number;
     isPlaying: boolean;
@@ -129,6 +126,24 @@ const handleMouseUp = (artId?: string) => {
     router.push({ name: "art", params: { id: artId } });
   }
 };
+
+const handleLike = async (artId: string) => {
+  try {
+    const res = await fetch(`${BASE_URL}/api/likes`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ artId }),
+    });
+    const data = await res.json();
+
+    console.log("like data: ", data);
+  } catch (error) {
+    console.log("there was amn error calling the likes post request: ", error);
+  }
+};
 </script>
 
 <template>
@@ -147,19 +162,32 @@ const handleMouseUp = (artId?: string) => {
     <div
       v-for="(item, index) in [...items, ...items]"
       :key="item.id"
-      @mouseup="() => handleMouseUp(item.id)"
       class="item relative overflow-hidden w-72 aspect-[3/5] rounded-lg hover:cursor-pointer"
     >
       <div
-        class="opacity-0 hover:opacity-100 absolute z-10 top-0 left-0 w-full h-full bg-black bg-opacity-50 text-white p-2 transition-all"
+        class="opacity-0 flex flex-col justify-between hover:opacity-100 absolute z-10 top-0 left-0 w-full h-full bg-black bg-opacity-50 text-white p-2 transition-all"
       >
-        <h1 class="text-xl font-bold">{{ item.title }}</h1>
-        <p class="text-sm">{{ item.desc }}</p>
+        <div>
+          <h1 class="text-xl font-bold">{{ item.title }}</h1>
+          <p class="text-sm">{{ item.desc }}</p>
+        </div>
+
+        <div class="w-full flex justify-end items-center">
+          <FontAwesomeIcon
+            icon="heart"
+            @click="() => handleLike(item.id)"
+            size="lg"
+            :class="` hover:text-red-200 transition-all duration-300 ${
+              item.Likes.length > 0 ? 'text-red-500' : 'text-white'
+            }`"
+          />
+        </div>
       </div>
 
       <img
         :src="item.imageUrl"
         :alt="item.title"
+        @mouseup="() => handleMouseUp(item.id)"
         class="w-full h-full object-cover"
       />
     </div>
