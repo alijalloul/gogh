@@ -36,7 +36,7 @@ export class ArtService {
     });
   }
 
-  async fetch(page: number, limit: number, search: string) {
+  async fetch(page: number, limit: number, search: string, userId?: string) {
     const startIndex = (page - 1) * limit;
 
     if (page < 1 || limit < 1) {
@@ -56,11 +56,13 @@ export class ArtService {
           }
         : {};
 
+      const userCondition = userId ? { userId } : {};
+
       const [items, total] = await Promise.all([
         this.dbService.art.findMany({
           skip: startIndex,
           take: limit,
-          where: searchCondition,
+          where: { AND: [searchCondition, userCondition] },
           include: {
             Likes: {
               select: {
@@ -149,7 +151,7 @@ export class ArtService {
     });
   }
 
-  async remove(id: string) {
+  async remove(id: string, userId: string) {
     const art = await this.dbService.art.findUnique({ where: { id } });
 
     if (!art) {
@@ -159,12 +161,24 @@ export class ArtService {
       );
     }
 
+    if (art.userId !== userId) {
+      throw new HttpException(
+        {
+          message: 'YOU ARE NOT THE RIGHTFUL OWNER',
+          statusCode: HttpStatus.FORBIDDEN,
+        },
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
     const { error } = await this.supabaseService.deleteFile(
       art.imageUrl.split('publib/')[1],
     );
 
     if (error) throw error;
 
-    return this.dbService.art.delete({ where: { id } });
+    const res = await this.dbService.art.delete({ where: { id } });
+
+    return res;
   }
 }

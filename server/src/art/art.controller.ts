@@ -28,8 +28,19 @@ export class ArtController {
     @Query('page', new ParseIntPipe()) page: number,
     @Query('limit', new ParseIntPipe()) limit: number,
     @Query('search') search?: string,
+    @Body() body?: { userId: string },
   ) {
     return this.artService.fetch(page, limit, search);
+  }
+
+  @Post()
+  fetchByUser(
+    @Query('page', new ParseIntPipe()) page: number,
+    @Query('limit', new ParseIntPipe()) limit: number,
+    @Query('search') search?: string,
+    @Body() body?: { userId: string },
+  ) {
+    return this.artService.fetch(page, limit, search, body?.userId);
   }
 
   @Post()
@@ -62,7 +73,10 @@ export class ArtController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.artService.remove(id);
+  @UseGuards(JwtAuthGaurd)
+  remove(@Param('id') id: string, @Req() req: Request) {
+    const userId = req.user as string;
+
+    return this.artService.remove(id, userId);
   }
 }

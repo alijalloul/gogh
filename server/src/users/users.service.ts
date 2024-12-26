@@ -24,7 +24,6 @@ export class UsersService {
         firstName: true,
         lastName: true,
         email: true,
-        art: true,
       },
     });
     return user;
@@ -54,9 +53,9 @@ export class UsersService {
       data: { ...body, password: hashedPassword },
     });
 
-    const { firstName, lastName, email } = newUser;
+    const { id, firstName, lastName, email } = newUser;
     return {
-      user: { firstName, lastName, email },
+      user: { id, firstName, lastName, email },
       token: this.jwtService.sign({ id: newUser.id }),
     };
   }
@@ -79,9 +78,9 @@ export class UsersService {
     if (!isPasswordValid) {
       throw new UnauthorizedException();
     }
-    const { firstName, lastName, email: userEmail } = user;
+    const { id, firstName, lastName, email: userEmail } = user;
     return {
-      user: { firstName, lastName, email: userEmail },
+      user: { id, firstName, lastName, email: userEmail },
       token: this.jwtService.sign({ id: user.id }),
     };
   }
