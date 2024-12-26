@@ -1,15 +1,21 @@
 import { BASE_URL } from "@/utils/getBaseUrl";
 import { defineStore } from "pinia";
 
+import type { ArtDto } from "@/Dto/artDto";
 import type { UserDto } from "@/Dto/userDto";
 import router from "@/router";
 
 interface AppState {
   user: UserDto | null;
+  art: ArtDto | null;
 }
+
+const token = localStorage.getItem("token");
+
 export const useUserStore = defineStore("user", {
   state: (): AppState => ({
     user: null,
+    art: null,
   }),
 
   actions: {
@@ -18,7 +24,7 @@ export const useUserStore = defineStore("user", {
         const res = await fetch(`${BASE_URL}/api/users/me`, {
           method: "GET",
           headers: {
-            authorization: `Bearer ${localStorage.getItem("token")}`,
+            authorization: `Bearer ${token}`,
           },
         });
 
@@ -27,10 +33,33 @@ export const useUserStore = defineStore("user", {
         if (res.ok) {
           this.user = data;
         } else {
-          throw new Error(data.message || "Login failed");
+          throw new Error(data.message);
         }
       } catch (error: any) {
-        console.error("Login Error:", error.message);
+        console.error("Fetch user error:", error.message);
+      }
+    },
+
+    async fetchArByUser(userId: string) {
+      try {
+        const res = await fetch(`${BASE_URL}/api/art`, {
+          method: "GET",
+          headers: {
+            authorization: `Bearer ${token}`,
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({ userId }),
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          this.art = data;
+        } else {
+          throw new Error(data.message);
+        }
+      } catch (error: any) {
+        console.error("Fetching art by user error:", error.message);
       }
     },
 

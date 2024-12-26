@@ -158,15 +158,24 @@ const handleLiking = (item: ArtDto) => {
       class="item relative overflow-hidden w-72 aspect-[3/5] rounded-lg hover:cursor-pointer"
     >
       <div
-        class="opacity-0 flex flex-col justify-between hover:opacity-100 absolute z-10 top-0 left-0 w-full h-full bg-black bg-opacity-50 text-white p-2 transition-all"
+        class="opacity-0 flex flex-col justify-between hover:opacity-100 absolute z-10 top-0 left-0 w-full h-full bg-black bg-opacity-50 text-white p-4 transition-all"
       >
-        <div>
-          <h1 class="text-xl font-bold">{{ item.title }}</h1>
-          <p class="text-sm">{{ item.desc }}</p>
+        <div class="flex justify-between items-start">
+          <div>
+            <h1 class="text-xl font-bold">{{ item.title }}</h1>
+            <p class="text-sm">{{ item.desc }}</p>
+          </div>
+
+          <div>
+            <FontAwesomeIcon v-if="item.userId === user?.id" icon="pen" />
+          </div>
         </div>
 
-        <div class="w-full flex justify-end items-center">
-          <div class="flex justify-center items-center space-x-4">
+        <div class="w-full flex justify-between items-end">
+          <div>
+            <FontAwesomeIcon v-if="item.userId === user?.id" icon="trash" />
+          </div>
+          <div class="flex justify-center items-center space-x-3">
             <span class="text-white">
               {{ item.Likes.length }}
             </span>

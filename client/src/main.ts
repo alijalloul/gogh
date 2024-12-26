@@ -6,9 +6,9 @@ import App from "./App.vue";
 import router from "./router";
 
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { faHeart } from "@fortawesome/free-solid-svg-icons";
+import { faHeart, faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
 
-library.add(faHeart);
+library.add([faHeart, faTrash, faPen]);
 
 const app = createApp(App);
 const pinia = createPinia();

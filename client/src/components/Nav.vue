@@ -2,10 +2,9 @@
 import { useUserStore } from "@/store/useUserStore";
 import { gsap } from "gsap";
 import { storeToRefs } from "pinia";
-import { onMounted, ref } from "vue";
+import { onMounted } from "vue";
 import { RouterLink } from "vue-router";
 
-const isLoggedIn = ref(localStorage.getItem("token") !== null);
 const { user } = storeToRefs(useUserStore());
 
 onMounted(() => {
@@ -52,17 +51,16 @@ onMounted(() => {
 
     <div>
       <RouterLink
-        v-if="!isLoggedIn"
-        to="/login"
-        class="text-3xl rounded-xl px-6 py-3 text-white bg-black hover:bg-gray-900 active:bg-gray-800 transition-all duration-300 hover:cursor-pointer"
-        >Login</RouterLink
-      >
-
-      <RouterLink
-        v-if="isLoggedIn && user?.id"
+        v-if="user?.id"
         :to="{ name: 'users', params: { id: user.id } }"
         class="text-3xl rounded-xl px-6 py-3 text-white bg-black hover:bg-gray-900 active:bg-gray-800 transition-all duration-300 hover:cursor-pointer"
         >Profile</RouterLink
+      >
+      <RouterLink
+        v-else
+        to="/login"
+        class="text-3xl rounded-xl px-6 py-3 text-white bg-black hover:bg-gray-900 active:bg-gray-800 transition-all duration-300 hover:cursor-pointer"
+        >Login</RouterLink
       >
     </div>
   </header>
