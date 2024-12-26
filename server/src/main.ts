@@ -10,7 +10,7 @@ async function bootstrap() {
       'https://gogh-v96t-dl1fn4nlb-alijallouls-projects.vercel.app',
       'http://localhost:3000',
     ],
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS ',
     allowedHeaders: 'Authorization, Content-Type',
   });
   await app.listen(process.env.PORT ?? 5000);

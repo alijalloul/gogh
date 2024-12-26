@@ -36,7 +36,7 @@ export class ArtService {
     });
   }
 
-  async fetch(page: number, limit: number, search: string, userId?: string) {
+  async fetch(page: number, limit: number, search: string) {
     const startIndex = (page - 1) * limit;
 
     if (page < 1 || limit < 1) {
@@ -56,29 +56,31 @@ export class ArtService {
           }
         : {};
 
-      const includeCondition = userId
-        ? {
-            Likes: {
-              where: { userId },
-              select: { artId: true },
-            },
-          }
-        : {};
-
       const [items, total] = await Promise.all([
         this.dbService.art.findMany({
           skip: startIndex,
           take: limit,
           where: searchCondition,
-          include: includeCondition,
+          include: {
+            Likes: {
+              select: {
+                userId: true,
+              },
+            },
+          },
         }),
         this.dbService.art.count({
           where: searchCondition,
         }),
       ]);
 
+      const newItems = items.map((item) => ({
+        ...item,
+        Likes: item.Likes.map((it) => it.userId),
+      }));
+
       return {
-        items,
+        items: newItems,
         total,
       };
     } catch (error) {
