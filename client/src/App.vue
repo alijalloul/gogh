@@ -13,7 +13,7 @@ if (token && !user.value) {
 </script>
 
 <template>
-  <div class="flex flex-col w-screen h-screen bg-slate-100">
+  <div class="min-h-screen flex flex-col bg-slate-100">
     <Nav />
 
     <RouterView />

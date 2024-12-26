@@ -58,12 +58,10 @@ const handleCreateArt = async () => {
 </script>
 
 <template>
-  <div class="flex-1 min-h-0 w-screen flex justify-center items-center">
-    <div
-      class="w-[90%] h-full rounded-lg flex justify-between p-5 flex-col space-y-5"
-    >
-      <div class="h-[80%] flex justify-between items-center">
-        <div class="h-full w-2/5 flex flex-col space-y-5">
+  <div class="flex-1 items-stretch min-h-0 w-screen flex justify-center">
+    <div class="w-[90%] rounded-lg flex justify-between p-5 flex-col space-y-5">
+      <div class="h-[80%] items-stretch flex justify-between">
+        <div class="w-2/5 flex flex-col space-y-5">
           <div class="flex flex-col space-y-2">
             <span>Title</span>
 
