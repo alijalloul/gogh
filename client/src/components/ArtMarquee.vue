@@ -166,18 +166,24 @@ const handleLiking = (item: ArtDto) => {
         </div>
 
         <div class="w-full flex justify-end items-center">
-          <FontAwesomeIcon
-            icon="heart"
-            @click="() => !isLiking && handleLiking(item)"
-            size="lg"
-            :class="` hover:text-red-200 transition-all duration-300 ${
+          <div class="flex justify-center items-center space-x-4">
+            <span class="text-white">
+              {{ item.Likes.length }}
+            </span>
+
+            <FontAwesomeIcon
+              icon="heart"
+              @click="() => !isLiking && handleLiking(item)"
+              size="lg"
+              :class="` hover:text-red-200 transition-all duration-300 ${
               isLiking
                 ? 'text-gray-300 hover:text-gray-300'
                 : item.Likes.includes(user?.id as string)
                 ? 'text-red-500'
                 : 'text-white'
             }`"
-          />
+            />
+          </div>
         </div>
       </div>
 
