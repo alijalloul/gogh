@@ -1,12 +1,27 @@
 <script setup lang="ts">
 import type { ArtDto } from "@/Dto/artDto";
 import router from "@/router";
-import { BASE_URL } from "@/utils/getBaseUrl";
+import { useArtStore } from "@/store/useArtStore";
+import { useUserStore } from "@/store/useUserStore";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { gsap } from "gsap";
+import { storeToRefs } from "pinia";
 import { onMounted, ref, watch } from "vue";
 
-const token = localStorage.getItem("token");
+const dragginThreshold = 20;
+
+const windowHeight = ref(window.innerHeight);
+const isMouseDown = ref(false);
+const lastYpercent = ref(0);
+const initialMouseY = ref(0);
+const deltaMouseY = ref(0);
+const isDragging = ref(false);
+const containerRef = ref<HTMLDivElement | null>(null);
+
+const { user } = storeToRefs(useUserStore());
+const { isLiking } = storeToRefs(useArtStore());
+
+let tl: gsap.core.Timeline;
 
 const props = withDefaults(
   defineProps<{
@@ -19,17 +34,6 @@ const props = withDefaults(
     isInverse: false,
   }
 );
-const windowHeight = ref(window.innerHeight);
-
-const dragginThreshold = 20;
-const isMouseDown = ref(false);
-
-const lastYpercent = ref(0);
-const initialMouseY = ref(0);
-const deltaMouseY = ref(0);
-const isDragging = ref(false);
-const containerRef = ref<HTMLDivElement | null>(null);
-let tl: gsap.core.Timeline;
 
 onMounted(() => {
   const direction = props.isInverse ? 50 : -50;
@@ -56,7 +60,6 @@ watch(
 
 watch(deltaMouseY, (newValue) => {
   const newYpercent = lastYpercent.value + (newValue / windowHeight.value) * 25;
-  const totalDistance = props.isInverse ? 50 : -50;
 
   if (props.isInverse) {
     if (newYpercent > 1 && newYpercent < 49) {
@@ -127,21 +130,11 @@ const handleMouseUp = (artId?: string) => {
   }
 };
 
-const handleLike = async (artId: string) => {
-  try {
-    const res = await fetch(`${BASE_URL}/api/likes`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ artId }),
-    });
-    const data = await res.json();
-
-    console.log("like data: ", data);
-  } catch (error) {
-    console.log("there was amn error calling the likes post request: ", error);
+const handleLiking = (item: ArtDto) => {
+  if (item.Likes.includes(user.value?.id as string)) {
+    useArtStore().removeLike(item.id);
+  } else {
+    useArtStore().like(item.id);
   }
 };
 </script>
@@ -175,10 +168,14 @@ const handleLike = async (artId: string) => {
         <div class="w-full flex justify-end items-center">
           <FontAwesomeIcon
             icon="heart"
-            @click="() => handleLike(item.id)"
+            @click="() => !isLiking && handleLiking(item)"
             size="lg"
             :class="` hover:text-red-200 transition-all duration-300 ${
-              item.Likes.length > 0 ? 'text-red-500' : 'text-white'
+              isLiking
+                ? 'text-gray-300 hover:text-gray-300'
+                : item.Likes.includes(user?.id as string)
+                ? 'text-red-500'
+                : 'text-white'
             }`"
           />
         </div>

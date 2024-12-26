@@ -1,17 +1,11 @@
 import { BASE_URL } from "@/utils/getBaseUrl";
 import { defineStore } from "pinia";
 
+import type { UserDto } from "@/Dto/userDto";
 import router from "@/router";
 
-interface User {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-}
-
 interface AppState {
-  user: User | null;
+  user: UserDto | null;
 }
 export const useUserStore = defineStore("user", {
   state: (): AppState => ({
