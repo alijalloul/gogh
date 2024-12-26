@@ -10,8 +10,8 @@ const { isLiking } = storeToRefs(useArtStore());
 
 const props = withDefaults(
   defineProps<{
-    items: ArtDto[];
-    userId: string;
+    items: ArtDto[] | null;
+    userId: string | null;
     wasDragging?: boolean;
     customClass?: string;
   }>(),

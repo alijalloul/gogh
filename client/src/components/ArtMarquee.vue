@@ -107,7 +107,7 @@ const handleMouseMove = (e: any) => {
 
   deltaMouseY.value = e.clientY - initialMouseY.value;
 };
-const handleMouseUp = (artId?: string) => {
+const handleMouseUp = () => {
   isDragging.value = false;
 
   const currentY =
@@ -146,7 +146,7 @@ const handleLiking = (item: ArtDto) => {
   >
     <Art
       :items="[...items, ...items]"
-      :userId="user?.id"
+      :userId="user?.id ?? null"
       :wasDragging="wasDragging"
       :customClass="`w-72 aspect-[3/5] rounded-lg`"
     />
