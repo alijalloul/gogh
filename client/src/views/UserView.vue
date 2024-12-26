@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import Art from "@/components/Art.vue";
 import Paginator from "@/components/Paginator.vue";
 import type { ArtDto } from "@/Dto/artDto";
 import type { UserDto } from "@/Dto/userDto";
@@ -115,25 +116,11 @@ onMounted(() => {
         <div
           class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-2"
         >
-          <RouterLink
-            v-for="(item, index) in art"
-            :to="{ name: 'art', params: { id: item.id } }"
-            :key="item?.id"
-            class="relative rounded-md hover:cursor-pointer aspect-[3/2]"
-          >
-            <div
-              class="opacity-0 hover:opacity-100 absolute z-10 top-0 left-0 w-full h-full bg-black bg-opacity-50 text-white p-2 transition-all"
-            >
-              <h1 class="text-xl font-bold">{{ item.title }}</h1>
-              <p class="text-sm">{{ item.desc }}</p>
-            </div>
-
-            <img
-              :src="item.imageUrl"
-              :alt="item.title"
-              class="w-full h-full object-cover"
-            />
-          </RouterLink>
+          <Art
+            :items="art ?? []"
+            :userId="user?.id ?? ''"
+            :customClass="`aspect-[3/2]`"
+          />
         </div>
 
         <div class="w-full flex justify-end items-center">

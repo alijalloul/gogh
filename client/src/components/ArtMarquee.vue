@@ -1,21 +1,20 @@
 <script setup lang="ts">
 import type { ArtDto } from "@/Dto/artDto";
-import router from "@/router";
 import { useArtStore } from "@/store/useArtStore";
 import { useUserStore } from "@/store/useUserStore";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { gsap } from "gsap";
 import { storeToRefs } from "pinia";
 import { onMounted, ref, watch } from "vue";
+import Art from "./Art.vue";
 
 const dragginThreshold = 20;
 
 const windowHeight = ref(window.innerHeight);
-const isMouseDown = ref(false);
 const lastYpercent = ref(0);
 const initialMouseY = ref(0);
 const deltaMouseY = ref(0);
 const isDragging = ref(false);
+const wasDragging = ref(false);
 const containerRef = ref<HTMLDivElement | null>(null);
 
 const { user } = storeToRefs(useUserStore());
@@ -91,20 +90,17 @@ const resumeAnimation = () => {
 };
 
 const handleMouseDown = (e: any) => {
-  isMouseDown.value = true;
+  wasDragging.value = true;
   initialMouseY.value = e.clientY;
   lastYpercent.value =
     (gsap.getProperty(containerRef.value, "yPercent") as number) || 0;
 };
 const handleMouseMove = (e: any) => {
-  if (!isMouseDown.value) return;
-
   if (
-    !isDragging.value &&
+    !wasDragging.value &&
     Math.abs(e.clientY - initialMouseY.value) > dragginThreshold
   ) {
-    console.log("isDragging: ");
-    isDragging.value = true;
+    wasDragging.value = true;
   }
 
   if (!isDragging.value) return;
@@ -112,8 +108,6 @@ const handleMouseMove = (e: any) => {
   deltaMouseY.value = e.clientY - initialMouseY.value;
 };
 const handleMouseUp = (artId?: string) => {
-  const wasDragging = isDragging.value;
-  isMouseDown.value = false;
   isDragging.value = false;
 
   const currentY =
@@ -125,9 +119,7 @@ const handleMouseUp = (artId?: string) => {
 
   initialMouseY.value = 0;
 
-  if (!wasDragging && artId) {
-    router.push({ name: "art", params: { id: artId } });
-  }
+  wasDragging.value = false;
 };
 
 const handleLiking = (item: ArtDto) => {
@@ -152,56 +144,11 @@ const handleLiking = (item: ArtDto) => {
     @mousemove="handleMouseMove"
     @mouseup="() => handleMouseUp()"
   >
-    <div
-      v-for="(item, index) in [...items, ...items]"
-      :key="item.id"
-      class="item relative overflow-hidden w-72 aspect-[3/5] rounded-lg hover:cursor-pointer"
-    >
-      <div
-        class="opacity-0 flex flex-col justify-between hover:opacity-100 absolute z-10 top-0 left-0 w-full h-full bg-black bg-opacity-50 text-white p-4 transition-all"
-      >
-        <div class="flex justify-between items-start">
-          <div>
-            <h1 class="text-xl font-bold">{{ item.title }}</h1>
-            <p class="text-sm">{{ item.desc }}</p>
-          </div>
-
-          <div>
-            <FontAwesomeIcon v-if="item.userId === user?.id" icon="pen" />
-          </div>
-        </div>
-
-        <div class="w-full flex justify-between items-end">
-          <div>
-            <FontAwesomeIcon v-if="item.userId === user?.id" icon="trash" />
-          </div>
-          <div class="flex justify-center items-center space-x-3">
-            <span class="text-white">
-              {{ item.Likes.length }}
-            </span>
-
-            <FontAwesomeIcon
-              icon="heart"
-              @click="() => !isLiking && handleLiking(item)"
-              size="lg"
-              :class="` hover:text-red-200 transition-all duration-300 ${
-              isLiking
-                ? 'text-gray-300 hover:text-gray-300'
-                : item.Likes.includes(user?.id as string)
-                ? 'text-red-500'
-                : 'text-white'
-            }`"
-            />
-          </div>
-        </div>
-      </div>
-
-      <img
-        :src="item.imageUrl"
-        :alt="item.title"
-        @mouseup="() => handleMouseUp(item.id)"
-        class="w-full h-full object-cover"
-      />
-    </div>
+    <Art
+      :items="[...items, ...items]"
+      :userId="user?.id"
+      :wasDragging="wasDragging"
+      :customClass="`w-72 aspect-[3/5] rounded-lg`"
+    />
   </div>
 </template>

@@ -111,5 +111,25 @@ export const useArtStore = defineStore("art", {
         this.isLiking = false;
       }
     },
+
+    async deleteArt(artId: string) {
+      try {
+        const res = await fetch(`${BASE_URL}/api/art/${artId}`, {
+          method: "DELETE",
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (res.ok) {
+          this.art = this.art?.filter((item) => item.id !== artId) ?? null;
+        }
+      } catch (error) {
+        console.log(
+          "there was an error calling the DELETE art request: ",
+          error
+        );
+      }
+    },
   },
 });
