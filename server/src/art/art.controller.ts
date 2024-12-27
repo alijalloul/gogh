@@ -28,19 +28,9 @@ export class ArtController {
     @Query('page', new ParseIntPipe()) page: number,
     @Query('limit', new ParseIntPipe()) limit: number,
     @Query('search') search?: string,
-    @Body() body?: { userId: string },
+    @Query('userId') userId?: string,
   ) {
-    return this.artService.fetch(page, limit, search);
-  }
-
-  @Post()
-  fetchByUser(
-    @Query('page', new ParseIntPipe()) page: number,
-    @Query('limit', new ParseIntPipe()) limit: number,
-    @Query('search') search?: string,
-    @Body() body?: { userId: string },
-  ) {
-    return this.artService.fetch(page, limit, search, body?.userId);
+    return this.artService.fetch(page, limit, search, userId);
   }
 
   @Post()
