@@ -4,23 +4,47 @@ import { defineStore } from "pinia";
 import { useUserStore } from "./useUserStore";
 
 interface AppState {
-  art: ArtDto[] | null;
-  total: number | null;
+  heroArt: { items: ArtDto[] | null; total: string | null };
+  mainArt: { items: ArtDto[] | null; total: string | null };
+  userArt: { items: ArtDto[] | null; total: string | null };
   isLiking: boolean;
+}
+
+function removeLikeLambda(
+  artList: ArtDto[] | null,
+  artId: string,
+  userId: string
+) {
+  return (
+    artList?.map((item) =>
+      item.id === artId
+        ? { ...item, Likes: item.Likes.filter((it) => it !== userId) }
+        : item
+    ) ?? null
+  );
+}
+
+function likeLambda(artList: ArtDto[] | null, artId: string, userId: string) {
+  artList?.filter((item) => item.id === artId)[0].Likes.push(userId);
+}
+
+function removeArtLambda(artList: ArtDto[] | null, artId: string) {
+  return artList?.filter((item) => item.id !== artId) ?? null;
 }
 
 export const useArtStore = defineStore("art", {
   state: (): AppState => ({
-    art: null,
-    total: null,
+    heroArt: { items: null, total: null },
+    mainArt: { items: null, total: null },
+    userArt: { items: null, total: null },
     isLiking: false,
   }),
 
   actions: {
-    async fetchArt(page: number = 1, limit: number = 4, search: string = "") {
+    async fetchHeroArt() {
       try {
         const res = await fetch(
-          `${BASE_URL}/api/art?page=${page}&limit=${limit}&search=${search}`,
+          `${BASE_URL}/api/art?page=${1}&limit=${16}&search=${""}`,
           {
             method: "GET",
           }
@@ -29,13 +53,51 @@ export const useArtStore = defineStore("art", {
         const data = await res.json();
 
         if (res.ok) {
-          this.art = data.items;
-          this.total = data.total;
+          console.log("data.items: ", data.items);
+          this.heroArt.items = data.items;
+          this.heroArt.total = data.total;
         } else {
           throw new Error(data.message || "Fetch art failed");
         }
       } catch (error: any) {
-        console.error("Fetch Art Error:", error.message);
+        console.error("Fetch Hero Art Error:", error.message);
+      }
+    },
+
+    async fetchArt({
+      page = 1,
+      limit = 8,
+      search = "",
+      userId,
+    }: {
+      page?: number;
+      limit?: number;
+      search?: string;
+      userId?: string;
+    }) {
+      try {
+        const res = await fetch(
+          `${BASE_URL}/api/art?page=${page}&limit=${limit}&search=${search}&userId=${userId}`,
+          {
+            method: "GET",
+          }
+        );
+
+        const data = await res.json();
+
+        if (res.ok) {
+          if (userId) {
+            this.userArt.items = data.items;
+            this.userArt.total = data.total;
+          } else {
+            this.mainArt.items = data.items;
+            this.mainArt.total = data.total;
+          }
+        } else {
+          throw new Error(data.message || "Fetch art failed");
+        }
+      } catch (error: any) {
+        console.error("Fetch Main Art Error:", error.message);
       }
     },
 
@@ -55,9 +117,9 @@ export const useArtStore = defineStore("art", {
         if (res.ok) {
           const data = await res.json();
 
-          this.art
-            ?.filter((item) => item.id === artId)[0]
-            .Likes.push(data.userId);
+          likeLambda(this.heroArt.items, artId, data.userId);
+          likeLambda(this.mainArt.items, artId, data.userId);
+          likeLambda(this.userArt.items, artId, data.userId);
         }
 
         this.isLiking = false;
@@ -88,15 +150,21 @@ export const useArtStore = defineStore("art", {
         if (res.ok) {
           const data = await res.json();
 
-          this.art =
-            this.art?.map((item) =>
-              item.id === artId
-                ? {
-                    ...item,
-                    Likes: item.Likes.filter((it) => it !== data.userId),
-                  }
-                : item
-            ) ?? null;
+          this.heroArt.items = removeLikeLambda(
+            this.heroArt.items,
+            data.artId,
+            data.userId
+          );
+          this.mainArt.items = removeLikeLambda(
+            this.mainArt.items,
+            data.artId,
+            data.userId
+          );
+          this.userArt.items = removeLikeLambda(
+            this.userArt.items,
+            data.artId,
+            data.userId
+          );
         }
 
         this.isLiking = false;
@@ -111,7 +179,7 @@ export const useArtStore = defineStore("art", {
       }
     },
 
-    async deleteArt(artId: string) {
+    async removeArt(artId: string) {
       try {
         const res = await fetch(`${BASE_URL}/api/art/${artId}`, {
           method: "DELETE",
@@ -121,7 +189,11 @@ export const useArtStore = defineStore("art", {
         });
 
         if (res.ok) {
-          this.art = this.art?.filter((item) => item.id !== artId) ?? null;
+          this.heroArt.items = removeArtLambda(this.heroArt.items, artId);
+
+          this.mainArt.items = removeArtLambda(this.mainArt.items, artId);
+
+          this.userArt.items = removeArtLambda(this.userArt.items, artId);
         }
       } catch (error) {
         console.log(

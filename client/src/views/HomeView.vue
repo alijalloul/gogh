@@ -3,15 +3,29 @@ import ArtMarquee from "@/components/ArtMarquee.vue";
 import { useArtStore } from "@/store/useArtStore";
 import gsap from "gsap";
 import { storeToRefs } from "pinia";
-import { ref, watch } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { RouterLink } from "vue-router";
 
-const { art } = storeToRefs(useArtStore());
+const { heroArt } = storeToRefs(useArtStore());
 
 const isView = ref(false);
 
-if (art.value === null) {
-  useArtStore().fetchArt(1, 16);
+onMounted(() => {
+  const sessionIsView = sessionStorage.getItem("isView") === "true";
+
+  if (sessionIsView) {
+    isView.value = sessionIsView;
+  }
+});
+
+watch(isView, (newValue) => {
+  if (newValue) {
+    sessionStorage.setItem("isView", newValue.toString());
+  }
+});
+
+if (heroArt.value.items === null) {
+  useArtStore().fetchHeroArt();
 }
 
 watch(isView, (value) => {
@@ -61,29 +75,29 @@ watch(isView, (value) => {
       </div>
     </div>
     <div
-      v-if="art && art.length > 0"
+      v-if="heroArt.items && heroArt.items.length > 0"
       class="relative w-[90%] h-full flex justify-center items-center"
     >
       <ArtMarquee
-        :items="art.slice(0, 3)"
+        :items="heroArt.items.slice(0, 3)"
         :isInverse="false"
         :position="0"
         :isPlaying="isView"
       />
       <ArtMarquee
-        :items="art.slice(4, 7)"
+        :items="heroArt.items.slice(4, 7)"
         :isInverse="true"
         :position="1"
         :isPlaying="isView"
       />
       <ArtMarquee
-        :items="art.slice(8, 11)"
+        :items="heroArt.items.slice(8, 11)"
         :isInverse="false"
         :position="2"
         :isPlaying="isView"
       />
       <ArtMarquee
-        :items="art.slice(12, 15)"
+        :items="heroArt.items.slice(12, 15)"
         :isInverse="true"
         :position="3"
         :isPlaying="isView"

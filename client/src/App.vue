@@ -3,6 +3,7 @@ import { storeToRefs } from "pinia";
 import { watch } from "vue";
 import { RouterView } from "vue-router";
 import Nav from "./components/Nav.vue";
+import { useArtStore } from "./store/useArtStore";
 import { useUserStore } from "./store/useUserStore";
 
 const token = localStorage.getItem("token");
@@ -14,7 +15,7 @@ if (token && !user.value) {
 
 watch(user, (newValue) => {
   if (newValue) {
-    useUserStore().fetchArByUser(newValue.id);
+    useArtStore().fetchArt({ userId: newValue.id });
   }
 });
 </script>

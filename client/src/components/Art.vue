@@ -71,7 +71,7 @@ watch(
           <FontAwesomeIcon
             v-if="item.userId === props.userId"
             icon="trash"
-            @click="() => useArtStore().deleteArt(item.id)"
+            @click="() => useArtStore().removeArt(item.id)"
             :class="`hover:text-red-500 active:text-red-600`"
           />
         </div>

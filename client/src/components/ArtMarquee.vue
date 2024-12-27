@@ -18,7 +18,6 @@ const wasDragging = ref(false);
 const containerRef = ref<HTMLDivElement | null>(null);
 
 const { user } = storeToRefs(useUserStore());
-const { isLiking } = storeToRefs(useArtStore());
 
 let tl: gsap.core.Timeline;
 
@@ -34,6 +33,8 @@ const props = withDefaults(
   }
 );
 
+console.log("isPlaying: ", props.isPlaying);
+
 onMounted(() => {
   const direction = props.isInverse ? 50 : -50;
 
@@ -42,7 +43,9 @@ onMounted(() => {
     defaults: { ease: "none", overwrite: "auto" },
   });
 
-  tl.pause();
+  if (!props.isPlaying) {
+    tl.pause();
+  }
 
   tl.to(containerRef.value, {
     yPercent: direction,

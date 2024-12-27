@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import Art from "@/components/Art.vue";
 import Paginator from "@/components/Paginator.vue";
-import type { ArtDto } from "@/Dto/artDto";
 import type { UserDto } from "@/Dto/userDto";
+import { useArtStore } from "@/store/useArtStore";
 import { useUserStore } from "@/store/useUserStore";
 import { BASE_URL } from "@/utils/getBaseUrl";
+import { storeToRefs } from "pinia";
 import { onMounted, ref, watch } from "vue";
 import { RouterLink, useRoute } from "vue-router";
 
@@ -12,11 +13,10 @@ const route = useRoute();
 const userId = route.params.id as string;
 
 const user = ref<UserDto | null>(null);
-const art = ref<ArtDto[] | null>(null);
+const { userArt } = storeToRefs(useArtStore());
 
 const current = ref(1);
 const totalPages = ref(0);
-const limit = 8;
 
 async function fetchUser() {
   try {
@@ -32,33 +32,15 @@ async function fetchUser() {
   }
 }
 
-async function fetchArtByUser() {
-  try {
-    const res = await fetch(
-      `${BASE_URL}/api/art?page=${
-        current.value
-      }&limit=${limit}&search=${""}&userId=${userId}`
-    );
-
-    if (res.ok) {
-      const data = await res.json();
-
-      art.value = data.items;
-      totalPages.value = Math.ceil(data.total / limit);
-    }
-  } catch (error) {
-    console.error("There was an error fetching the art by userId: ", error);
-  }
-}
-
 watch(current, (newValue: number) => {
   console.log("new page: ", newValue);
 
-  fetchArtByUser();
+  useArtStore().fetchArt({ userId });
 });
+
 onMounted(() => {
   fetchUser();
-  fetchArtByUser();
+  useArtStore().fetchArt({ userId });
 });
 </script>
 
@@ -109,10 +91,11 @@ onMounted(() => {
 
       <div class="flex flex-col space-y-4 p-16">
         <div
+          v-if="userArt.items"
           class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-2"
         >
           <Art
-            :items="art ?? []"
+            :items="userArt.items"
             :userId="user?.id ?? ''"
             :customClass="`aspect-[3/2]`"
           />
