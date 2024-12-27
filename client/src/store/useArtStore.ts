@@ -1,14 +1,13 @@
 import type { ArtDto } from "@/Dto/artDto";
 import { BASE_URL } from "@/utils/getBaseUrl";
 import { defineStore } from "pinia";
+import { useUserStore } from "./useUserStore";
 
 interface AppState {
   art: ArtDto[] | null;
   total: number | null;
   isLiking: boolean;
 }
-
-const token = localStorage.getItem("token");
 
 export const useArtStore = defineStore("art", {
   state: (): AppState => ({
@@ -48,7 +47,7 @@ export const useArtStore = defineStore("art", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            authorization: `Bearer ${token}`,
+            authorization: `Bearer ${useUserStore().token}`,
           },
           body: JSON.stringify({ artId }),
         });
@@ -81,7 +80,7 @@ export const useArtStore = defineStore("art", {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
-            authorization: `Bearer ${token}`,
+            authorization: `Bearer ${useUserStore().token}`,
           },
           body: JSON.stringify({ artId }),
         });
@@ -117,7 +116,7 @@ export const useArtStore = defineStore("art", {
         const res = await fetch(`${BASE_URL}/api/art/${artId}`, {
           method: "DELETE",
           headers: {
-            authorization: `Bearer ${token}`,
+            authorization: `Bearer ${useUserStore().token}`,
           },
         });
 

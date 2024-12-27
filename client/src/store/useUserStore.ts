@@ -8,13 +8,13 @@ import router from "@/router";
 interface AppState {
   user: UserDto | null;
   art: ArtDto | null;
+  token: string | null;
 }
-
-const token = localStorage.getItem("token");
 
 export const useUserStore = defineStore("user", {
   state: (): AppState => ({
     user: null,
+    token: localStorage.getItem("token"),
     art: null,
   }),
 
@@ -24,7 +24,7 @@ export const useUserStore = defineStore("user", {
         const res = await fetch(`${BASE_URL}/api/users/me`, {
           method: "GET",
           headers: {
-            authorization: `Bearer ${token}`,
+            authorization: `Bearer ${this.token}`,
           },
         });
 
@@ -40,16 +40,23 @@ export const useUserStore = defineStore("user", {
       }
     },
 
-    async fetchArByUser(userId: string) {
+    async fetchArByUser(
+      userId: string,
+      page: number = 1,
+      limit: number = 4,
+      search: string = ""
+    ) {
       try {
-        const res = await fetch(`${BASE_URL}/api/art`, {
-          method: "GET",
-          headers: {
-            authorization: `Bearer ${token}`,
-            "content-type": "application/json",
-          },
-          body: JSON.stringify({ userId }),
-        });
+        const res = await fetch(
+          `${BASE_URL}/api/art?page=${page}&limit=${limit}&search=${search}&userId=${userId}`,
+          {
+            method: "GET",
+            headers: {
+              authorization: `Bearer ${this.token}`,
+              "content-type": "application/json",
+            },
+          }
+        );
 
         const data = await res.json();
 
@@ -76,6 +83,7 @@ export const useUserStore = defineStore("user", {
 
         if (res.ok) {
           this.user = data.user;
+          this.token = data.token;
           localStorage.setItem("token", data.token);
 
           router.push("/");
@@ -110,6 +118,8 @@ export const useUserStore = defineStore("user", {
 
         if (res.ok) {
           this.user = data.user;
+          this.token = data.token;
+
           localStorage.setItem("token", data.token);
 
           router.push("/");
@@ -123,6 +133,7 @@ export const useUserStore = defineStore("user", {
 
     logout() {
       this.user = null;
+      this.token = null;
       localStorage.removeItem("token");
 
       router.push("/");

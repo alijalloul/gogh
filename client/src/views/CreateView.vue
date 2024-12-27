@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import router from "@/router";
+import { useUserStore } from "@/store/useUserStore";
 import { BASE_URL } from "@/utils/getBaseUrl";
+import { storeToRefs } from "pinia";
 import { ref } from "vue";
 
 const title = ref("");
@@ -9,7 +11,7 @@ const file = ref<File | null>(null);
 const previewUrl = ref<string | null>(null);
 const fileInput = ref<HTMLInputElement | null>(null);
 
-const token = localStorage.getItem("token");
+const { token } = storeToRefs(useUserStore());
 
 const triggerFileInput = () => {
   fileInput.value?.click();
@@ -60,7 +62,7 @@ const handleCreateArt = async () => {
 <template>
   <div class="flex-1 items-stretch min-h-0 w-screen flex justify-center">
     <div class="w-[90%] rounded-lg flex justify-between p-5 flex-col space-y-5">
-      <div class="h-[80%] items-stretch flex justify-between">
+      <div class="h-[70vh] items-stretch flex justify-between">
         <div class="w-2/5 flex flex-col space-y-5">
           <div class="flex flex-col space-y-2">
             <span>Title</span>

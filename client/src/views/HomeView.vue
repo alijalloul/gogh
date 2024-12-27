@@ -1,16 +1,11 @@
 <script setup lang="ts">
 import ArtMarquee from "@/components/ArtMarquee.vue";
 import { useArtStore } from "@/store/useArtStore";
-import { useUserStore } from "@/store/useUserStore";
 import gsap from "gsap";
 import { storeToRefs } from "pinia";
 import { ref, watch } from "vue";
 import { RouterLink } from "vue-router";
 
-const items = ref(["Gogh", "Van", "Sunflowers", "Starry Night"]);
-
-const isLoggedIn = ref(localStorage.getItem("token") !== null);
-const { user } = storeToRefs(useUserStore());
 const { art } = storeToRefs(useArtStore());
 
 const isView = ref(false);

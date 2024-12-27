@@ -35,14 +35,9 @@ async function fetchUser() {
 async function fetchArtByUser() {
   try {
     const res = await fetch(
-      `${BASE_URL}/api/art?page=${current.value}&limit=${limit}`,
-      {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify({ userId }),
-      }
+      `${BASE_URL}/api/art?page=${
+        current.value
+      }&limit=${limit}&search=${""}&userId=${userId}`
     );
 
     if (res.ok) {
