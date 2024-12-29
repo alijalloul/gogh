@@ -31,7 +31,7 @@ onMounted(() => {
 
 <template>
   <header
-    class="relative z-30 w-full flex justify-between items-center py-5 px-12"
+    class="relative z-30 w-full flex justify-between items-center py-5 px-12 pointer-events-none"
   >
     <div
       class="header_container flex justify-center items-center space-x-2 opacity-0"
@@ -40,7 +40,7 @@ onMounted(() => {
         <h1 class="text-6xl font-medium text-white">Gogh</h1>
       </div>
 
-      <RouterLink to="/">
+      <RouterLink to="/" class="pointer-events-auto">
         <img
           src="/images/ear.png"
           alt="gogh's_ear.png"
@@ -49,7 +49,7 @@ onMounted(() => {
       </RouterLink>
     </div>
 
-    <div>
+    <div class="pointer-events-auto">
       <RouterLink
         v-if="user?.id"
         :to="{ name: 'users', params: { id: user.id } }"

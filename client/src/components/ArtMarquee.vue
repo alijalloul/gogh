@@ -77,19 +77,21 @@ watch(deltaMouseY, (newValue) => {
   }
 });
 
-const stopAnimation = () => {
+const handleMouseEnter = () => {
   if (tl) {
     gsap.to(tl, { timeScale: 0, duration: 1 });
   }
 };
 
-const resumeAnimation = () => {
+const handleMouseLeave = () => {
+  handleMouseUp();
   if (tl) {
     gsap.to(tl, { timeScale: 1, duration: 1 });
   }
 };
 
 const handleMouseDown = (e: any) => {
+  wasDragging.value = false;
   isDragging.value = true;
   initialMouseY.value = e.clientY;
   lastYpercent.value =
@@ -109,7 +111,6 @@ const handleMouseMove = (e: any) => {
 };
 const handleMouseUp = () => {
   isDragging.value = false;
-  wasDragging.value = false;
 
   const currentY =
     (gsap.getProperty(containerRef.value, "yPercent") as number) || 0;
@@ -125,15 +126,15 @@ const handleMouseUp = () => {
 <template>
   <div
     ref="containerRef"
-    :class="`art_container absolute flex flex-col space-y-5 select-none ${
+    :class="`art_container z-20 absolute flex flex-col space-y-5 select-none ${
       props.isInverse ? 'bottom-0' : 'top-0'
     }`"
     :style="{ left: `${props.position * 25}%` }"
-    @mouseenter="stopAnimation"
-    @mouseleave="resumeAnimation"
-    @mousedown="handleMouseDown"
-    @mousemove="handleMouseMove"
-    @mouseup="() => handleMouseUp()"
+    @pointerenter="handleMouseEnter"
+    @pointerleave="handleMouseLeave"
+    @pointerdown="handleMouseDown"
+    @pointermove="handleMouseMove"
+    @pointerup="handleMouseUp"
   >
     <Art
       :items="[...items, ...items]"
