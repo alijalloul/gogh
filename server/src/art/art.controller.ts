@@ -57,9 +57,12 @@ export class ArtController {
   update(
     @Param('id') id: string,
     @Body() body: UpdateArtDto,
+    @Req() req: Request,
     @UploadedFile() file?: Express.Multer.File,
   ) {
-    return this.artService.update(id, body, file);
+    const userId = req.user as string;
+
+    return this.artService.update(id, body, file, userId);
   }
 
   @Delete(':id')

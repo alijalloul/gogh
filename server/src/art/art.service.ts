@@ -113,7 +113,12 @@ export class ArtService {
     return art;
   }
 
-  async update(id: string, body: UpdateArtDto, file: Express.Multer.File) {
+  async update(
+    id: string,
+    body: UpdateArtDto,
+    file: Express.Multer.File,
+    userId: string,
+  ) {
     const art = await this.dbService.art.findUnique({
       where: { id },
     });
@@ -125,6 +130,16 @@ export class ArtService {
       );
     }
 
+    if (art.userId !== userId) {
+      throw new HttpException(
+        {
+          message: 'YOU ARE NOT THE RIGHTFUL OWNER',
+          statusCode: HttpStatus.FORBIDDEN,
+        },
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
     let res = { data: null, error: null };
 
     if (file) {
@@ -132,7 +147,9 @@ export class ArtService {
       const fileName = `${randomString}-${file.originalname}`;
 
       res = await this.supabaseService.updateFile(
-        art.imageUrl.split('publib/')[1],
+        art.imageUrl.split(
+          `${process.env.SUPABASE_URL}/storage/v1/object/public/art/`,
+        )[1],
         fileName,
         file.buffer,
       );
@@ -172,7 +189,9 @@ export class ArtService {
     }
 
     const { error } = await this.supabaseService.deleteFile(
-      art.imageUrl.split('publib/')[1],
+      art.imageUrl.split(
+        `${process.env.SUPABASE_URL}/storage/v1/object/public/art/`,
+      )[1],
     );
 
     if (error) throw error;
