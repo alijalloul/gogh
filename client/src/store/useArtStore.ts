@@ -53,7 +53,6 @@ export const useArtStore = defineStore("art", {
         const data = await res.json();
 
         if (res.ok) {
-          console.log("data.items: ", data.items);
           this.heroArt.items = data.items;
           this.heroArt.total = data.total;
         } else {

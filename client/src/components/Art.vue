@@ -4,7 +4,6 @@ import router from "@/router";
 import { useArtStore } from "@/store/useArtStore";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { storeToRefs } from "pinia";
-import { watch } from "vue";
 
 const { isLiking } = storeToRefs(useArtStore());
 
@@ -16,7 +15,7 @@ const props = withDefaults(
     customClass?: string;
   }>(),
   {
-    wasDragging: true,
+    wasDragging: false,
     customClass: "",
   }
 );
@@ -30,19 +29,10 @@ const handleLiking = (item: ArtDto) => {
 };
 
 const handleMouseUp = (artId?: string) => {
-  console.log("wasDragging (child):", props.wasDragging);
-
   if (!props.wasDragging && artId) {
     router.push({ name: "art", params: { id: artId } });
   }
 };
-
-watch(
-  () => props.wasDragging,
-  (newVal) => {
-    console.log("wasDragging updated:", newVal);
-  }
-);
 </script>
 
 <template>

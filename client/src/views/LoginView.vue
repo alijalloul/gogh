@@ -7,10 +7,7 @@ const email = ref("");
 const password = ref("");
 
 const handleLogin = async () => {
-  console.log("clicked");
   await useUserStore().login(email.value, password.value);
-
-  console.log("finished");
 };
 </script>
 

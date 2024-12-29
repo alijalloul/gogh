@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { ArtDto } from "@/Dto/artDto";
-import { useArtStore } from "@/store/useArtStore";
 import { useUserStore } from "@/store/useUserStore";
 import { gsap } from "gsap";
 import { storeToRefs } from "pinia";
@@ -32,8 +31,6 @@ const props = withDefaults(
     isInverse: false,
   }
 );
-
-console.log("isPlaying: ", props.isPlaying);
 
 onMounted(() => {
   const direction = props.isInverse ? 50 : -50;
@@ -93,12 +90,14 @@ const resumeAnimation = () => {
 };
 
 const handleMouseDown = (e: any) => {
-  wasDragging.value = true;
+  isDragging.value = true;
   initialMouseY.value = e.clientY;
   lastYpercent.value =
     (gsap.getProperty(containerRef.value, "yPercent") as number) || 0;
 };
 const handleMouseMove = (e: any) => {
+  if (!isDragging.value) return;
+
   if (
     !wasDragging.value &&
     Math.abs(e.clientY - initialMouseY.value) > dragginThreshold
@@ -106,12 +105,11 @@ const handleMouseMove = (e: any) => {
     wasDragging.value = true;
   }
 
-  if (!isDragging.value) return;
-
   deltaMouseY.value = e.clientY - initialMouseY.value;
 };
 const handleMouseUp = () => {
   isDragging.value = false;
+  wasDragging.value = false;
 
   const currentY =
     (gsap.getProperty(containerRef.value, "yPercent") as number) || 0;
@@ -121,16 +119,6 @@ const handleMouseUp = () => {
   tl.progress(progress);
 
   initialMouseY.value = 0;
-
-  wasDragging.value = false;
-};
-
-const handleLiking = (item: ArtDto) => {
-  if (item.Likes.includes(user.value?.id as string)) {
-    useArtStore().removeLike(item.id);
-  } else {
-    useArtStore().like(item.id);
-  }
 };
 </script>
 

@@ -51,7 +51,6 @@ const handleCreateArt = async () => {
 
     if (res.ok) {
       const data = await res.json();
-      console.log("Upload Success:", data);
     }
   } catch (error) {
     console.error("Upload failed:", error);

@@ -33,8 +33,6 @@ async function fetchUser() {
 }
 
 watch(current, (newValue: number) => {
-  console.log("new page: ", newValue);
-
   useArtStore().fetchArt({ userId });
 });
 
