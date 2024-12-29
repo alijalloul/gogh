@@ -1,10 +1,13 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, ref } from "vue";
 
 const props = defineProps<{
   current: number;
-  totalPages: number;
+  total: number;
+  limit: number;
 }>();
+
+const totalPages = ref(Math.ceil(props.total / props.limit));
 
 const emit = defineEmits(["update:current"]);
 
@@ -18,7 +21,7 @@ const paginationRange = computed(() => {
 
   if (props.current === 1) {
     for (let i = 1; i <= 4; i++) {
-      if (i > props.totalPages) {
+      if (i > totalPages.value) {
         return range;
       }
 
@@ -28,13 +31,13 @@ const paginationRange = computed(() => {
     return range;
   }
 
-  if (props.current === props.totalPages) {
+  if (props.current === totalPages.value) {
     for (let i = 1; i <= 3; i++) {
-      if (props.totalPages - 3 + i < 1) {
+      if (totalPages.value - 3 + i < 1) {
         return range;
       }
 
-      range.push(props.totalPages - 3 + i);
+      range.push(totalPages.value - 3 + i);
     }
 
     return range;
@@ -42,7 +45,7 @@ const paginationRange = computed(() => {
 
   for (let i = -1; i <= 1; i++) {
     const page = props.current + i;
-    if (page > 0 && page < props.totalPages + 1) {
+    if (page > 0 && page < totalPages.value + 1) {
       range.push(page);
     }
   }

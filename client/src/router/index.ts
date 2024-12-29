@@ -21,8 +21,14 @@ const router = createRouter({
       component: () => import("@/views/LoginView.vue"),
     },
     {
-      path: "/art/:id",
+      path: "/art",
       name: "art",
+
+      component: () => import("@/views/mainArtView.vue"),
+    },
+    {
+      path: "/art/:id",
+      name: "oneArt",
 
       component: () => import("@/views/ArtView.vue"),
     },

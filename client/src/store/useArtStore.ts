@@ -4,9 +4,9 @@ import { defineStore } from "pinia";
 import { useUserStore } from "./useUserStore";
 
 interface AppState {
-  heroArt: { items: ArtDto[] | null; total: string | null };
-  mainArt: { items: ArtDto[] | null; total: string | null };
-  userArt: { items: ArtDto[] | null; total: string | null };
+  heroArt: { items: ArtDto[] | null; total: number | null };
+  mainArt: { items: ArtDto[] | null; total: number | null };
+  userArt: { items: ArtDto[] | null; total: number | null };
   isLiking: boolean;
 }
 
@@ -75,12 +75,18 @@ export const useArtStore = defineStore("art", {
       userId?: string;
     }) {
       try {
-        const res = await fetch(
-          `${BASE_URL}/api/art?page=${page}&limit=${limit}&search=${search}&userId=${userId}`,
-          {
-            method: "GET",
-          }
-        );
+        const url = new URL(`${BASE_URL}/api/art`);
+        url.searchParams.set("page", String(page));
+        url.searchParams.set("limit", String(limit));
+        url.searchParams.set("search", search);
+
+        if (userId) {
+          url.searchParams.set("userId", userId);
+        }
+
+        const res = await fetch(url.toString(), {
+          method: "GET",
+        });
 
         const data = await res.json();
 

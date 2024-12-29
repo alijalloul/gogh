@@ -30,7 +30,7 @@ const handleLiking = (item: ArtDto) => {
 
 const handleMouseUp = (artId?: string) => {
   if (!props.wasDragging && artId) {
-    router.push({ name: "art", params: { id: artId } });
+    router.push({ name: "oneArt", params: { id: artId } });
   }
 };
 </script>
