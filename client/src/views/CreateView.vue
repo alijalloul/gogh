@@ -3,21 +3,48 @@ import router from "@/router";
 import { useUserStore } from "@/store/useUserStore";
 import { BASE_URL } from "@/utils/getBaseUrl";
 import { storeToRefs } from "pinia";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
+import { useRoute } from "vue-router";
+
+const route = useRoute();
+const artId = route.params.id as string;
 
 const title = ref("");
 const desc = ref("");
-const file = ref<File | null>(null);
+
 const previewUrl = ref<string | null>(null);
+
+const file = ref<File | null>(null);
 const fileInput = ref<HTMLInputElement | null>(null);
 
 const { token } = storeToRefs(useUserStore());
+
+onMounted(() => {
+  async function fetchArt(artId: string) {
+    try {
+      const res = await fetch(`${BASE_URL}/api/art/${artId}`);
+      if (res.ok) {
+        const data = await res.json();
+
+        title.value = data.title;
+        desc.value = data.desc;
+        previewUrl.value = data.imageUrl;
+      }
+    } catch (error) {
+      console.log("error fetching the art with id: ", artId, ": ", error);
+    }
+  }
+
+  if (artId) {
+    fetchArt(artId);
+  }
+});
 
 const triggerFileInput = () => {
   fileInput.value?.click();
 };
 
-if (!token) {
+if (!token.value) {
   router.push("/login");
 }
 
@@ -29,7 +56,7 @@ const handleFileUpload = (event: Event) => {
   }
 };
 
-const handleCreateArt = async () => {
+const handleSubmit = async () => {
   if (!file.value) {
     console.error("No file selected");
     return;
@@ -39,21 +66,46 @@ const handleCreateArt = async () => {
   formData.append("file", file.value);
   formData.append("title", title.value);
   formData.append("desc", desc.value);
+  async function createArt() {
+    try {
+      const res = await fetch(`${BASE_URL}/api/art`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token.value}`,
+        },
+        body: formData,
+      });
 
-  try {
-    const res = await fetch(`${BASE_URL}/api/art`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      body: formData,
-    });
-
-    if (res.ok) {
-      const data = await res.json();
+      if (res.ok) {
+        router.push("/");
+      }
+    } catch (error) {
+      console.error("Create art failed:", error);
     }
-  } catch (error) {
-    console.error("Upload failed:", error);
+  }
+
+  async function updateArt() {
+    try {
+      const res = await fetch(`${BASE_URL}/api/art/${artId}`, {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token.value}`,
+        },
+        body: formData,
+      });
+
+      if (res.ok) {
+        router.push("/");
+      }
+    } catch (error) {
+      console.error("Update art failed:", error);
+    }
+  }
+
+  if (artId) {
+    updateArt();
+  } else {
+    createArt();
   }
 };
 </script>
@@ -104,10 +156,10 @@ const handleCreateArt = async () => {
 
       <div class="w-full flex justify-end items-center">
         <button
-          @click="handleCreateArt"
+          @click="handleSubmit"
           class="text-white bg-indigo-600 px-4 py-3 rounded-lg hover:bg-indigo-500 active:bg-indigo-400 hover:cursor-pointer transition-all duration-300"
         >
-          Create
+          {{ artId ? "Update" : "Create" }}
         </button>
       </div>
     </div>

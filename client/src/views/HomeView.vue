@@ -68,7 +68,7 @@ watch(isView, (value) => {
           View
         </button>
         <RouterLink
-          to="/create"
+          to="/art/create"
           class="text-3xl rounded-xl px-6 py-3 border bg-white hover:bg-gray-200 active:bg-gray-300 transition-all duration-300 hover:cursor-pointer"
           >Create</RouterLink
         >

@@ -27,22 +27,29 @@ const router = createRouter({
       component: () => import("@/views/MainArtView.vue"),
     },
     {
+      path: "/art/create",
+      name: "createArt",
+
+      component: () => import("@/views/CreateView.vue"),
+    },
+    {
+      path: "/art/edit/:id",
+      name: "editArt",
+
+      component: () => import("@/views/CreateView.vue"),
+    },
+    {
       path: "/art/:id",
       name: "oneArt",
 
       component: () => import("@/views/ArtView.vue"),
     },
+
     {
       path: "/users/:id",
       name: "users",
 
       component: () => import("@/views/UserView.vue"),
-    },
-    {
-      path: "/create",
-      name: "create",
-
-      component: () => import("@/views/CreateView.vue"),
     },
   ],
 });

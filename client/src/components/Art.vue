@@ -55,25 +55,32 @@ const handleMouseUp = (artId?: string) => {
           <p class="text-sm">{{ item.desc }}</p>
         </div>
 
-        <div>
+        <div class="z-20">
           <FontAwesomeIcon
             v-if="item.userId === props.userId"
             icon="pen"
-            class="z-20"
+            @click="
+              () => {
+                router.push({ name: 'editArt', params: { id: item.id } });
+              }
+            "
+            :class="`hover:text-orange-500 active:text-orange-600
+          transition-all duration-300`"
           />
         </div>
       </div>
 
       <div class="w-full flex justify-between items-end">
-        <div>
+        <div class="z-20">
           <FontAwesomeIcon
             v-if="item.userId === props.userId"
             icon="trash"
             @click="() => useArtStore().removeArt(item.id)"
-            :class="`hover:text-red-500 active:text-red-600 z-20`"
+            :class="`hover:text-red-500 active:text-red-600 `"
           />
         </div>
-        <div class="flex justify-center items-center space-x-3">
+
+        <div class="flex justify-center items-center space-x-3 z-20">
           <span class="text-white">
             {{ item.Likes.length }}
           </span>
@@ -82,7 +89,7 @@ const handleMouseUp = (artId?: string) => {
             icon="heart"
             @click="() => !isLiking && handleLiking(item)"
             size="lg"
-            :class="` hover:text-red-200 transition-all duration-300 z-20 ${
+            :class="` hover:text-red-400 transition-all duration-300 ${
               isLiking
                 ? 'text-gray-300 hover:text-gray-300'
                 : item.Likes.includes(props.userId as string)
