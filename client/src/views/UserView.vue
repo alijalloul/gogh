@@ -12,11 +12,12 @@ import { RouterLink, useRoute } from "vue-router";
 const route = useRoute();
 const userId = route.params.id as string;
 
-const user = ref<UserDto | null>(null);
-const { userArt } = storeToRefs(useArtStore());
+const artStore = useArtStore();
+const { userArt } = storeToRefs(artStore);
 
+const user = ref<UserDto | null>(null);
 const current = ref(1);
-const totalPages = ref(0);
+const limit = ref(8);
 
 async function fetchUser() {
   try {
@@ -33,12 +34,12 @@ async function fetchUser() {
 }
 
 watch(current, (newValue: number) => {
-  useArtStore().fetchArt({ userId });
+  artStore.fetchArt({ userId });
 });
 
 onMounted(() => {
   fetchUser();
-  useArtStore().fetchArt({ userId });
+  artStore.fetchArt({ page: current.value, limit: limit.value, userId });
 });
 </script>
 
@@ -101,10 +102,12 @@ onMounted(() => {
 
         <div class="w-full flex justify-end items-center">
           <Paginator
+            v-if="userArt.total"
             :current="current"
             @update:current="current = $event"
             :setCurrent="2"
-            :totalPages="totalPages"
+            :total="userArt.total"
+            :limit="limit"
           />
         </div>
       </div>

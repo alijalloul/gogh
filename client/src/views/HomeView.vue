@@ -76,30 +76,26 @@ watch(isView, (value) => {
     </div>
     <div
       v-if="heroArt.items && heroArt.items.length > 0"
-      class="relative w-[90%] h-full flex justify-center items-center"
+      class="relative w-[90%] h-full flex justify-between items-center"
     >
       <ArtMarquee
         :items="heroArt.items.slice(0, 3)"
         :isInverse="false"
-        :position="0"
         :isPlaying="isView"
       />
       <ArtMarquee
         :items="heroArt.items.slice(4, 7)"
         :isInverse="true"
-        :position="1"
         :isPlaying="isView"
       />
       <ArtMarquee
         :items="heroArt.items.slice(8, 11)"
         :isInverse="false"
-        :position="2"
         :isPlaying="isView"
       />
       <ArtMarquee
         :items="heroArt.items.slice(12, 15)"
         :isInverse="true"
-        :position="3"
         :isPlaying="isView"
       />
     </div>

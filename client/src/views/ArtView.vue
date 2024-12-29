@@ -37,7 +37,7 @@ onMounted(() => {
 
 <template>
   <div class="flex-1 min-h-0 w-full h-full px-16 py-4">
-    <div class="relative w-full h-full rounded-xl overflow-hidden">
+    <div class="relative w-full h-[80vh] rounded-xl overflow-hidden">
       <div
         class="absolute left-5 bottom-5 bg-black bg-opacity-70 px-8 py-6 rounded-xl text-white flex flex-col justify-between items-start space-y-4"
       >

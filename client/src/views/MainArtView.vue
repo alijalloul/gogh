@@ -4,7 +4,7 @@ import Paginator from "@/components/Paginator.vue";
 import { useArtStore } from "@/store/useArtStore";
 import { useUserStore } from "@/store/useUserStore";
 import { storeToRefs } from "pinia";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 
 const artStore = useArtStore();
 const { mainArt } = storeToRefs(artStore);
@@ -13,8 +13,16 @@ const { user } = storeToRefs(useUserStore());
 const limit = ref(16);
 const current = ref(1);
 
-onMounted(() => {
+function fetchArt() {
   artStore.fetchArt({ page: current.value, limit: limit.value });
+}
+
+onMounted(() => {
+  fetchArt();
+});
+
+watch(current, (newValue: number) => {
+  fetchArt();
 });
 </script>
 

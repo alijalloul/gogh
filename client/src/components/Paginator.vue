@@ -15,13 +15,12 @@ const handlePagination = (newPage: number) => {
   emit("update:current", newPage);
 };
 
-// Calculate pages to display around the current page
 const paginationRange = computed(() => {
   const range = [];
 
   if (props.current === 1) {
     for (let i = 1; i <= 4; i++) {
-      if (i > totalPages.value) {
+      if (i >= totalPages.value) {
         return range;
       }
 

@@ -24,7 +24,6 @@ const props = withDefaults(
   defineProps<{
     items: ArtDto[];
     isInverse?: boolean;
-    position: number;
     isPlaying: boolean;
   }>(),
   {
@@ -61,14 +60,14 @@ watch(deltaMouseY, (newValue) => {
   const newYpercent = lastYpercent.value + (newValue / windowHeight.value) * 25;
 
   if (props.isInverse) {
-    if (newYpercent > 1 && newYpercent < 49) {
+    if (newYpercent > 0 && newYpercent < 50) {
       gsap.to(containerRef.value, {
         yPercent: newYpercent,
         duration: 0.1,
       });
     }
   } else {
-    if (newYpercent < -1 && newYpercent > -49) {
+    if (newYpercent < 0 && newYpercent > -50) {
       gsap.to(containerRef.value, {
         yPercent: newYpercent,
         duration: 0.1,
@@ -126,10 +125,9 @@ const handleMouseUp = () => {
 <template>
   <div
     ref="containerRef"
-    :class="`art_container z-20 absolute flex flex-col space-y-5 select-none ${
-      props.isInverse ? 'bottom-0' : 'top-0'
+    :class="`art_container z-20 relative flex flex-col space-y-5 select-none ${
+      props.isInverse ? 'bottom-1/2' : 'top-1/2'
     }`"
-    :style="{ left: `${props.position * 25}%` }"
     @pointerenter="handleMouseEnter"
     @pointerleave="handleMouseLeave"
     @pointerdown="handleMouseDown"
