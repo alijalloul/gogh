@@ -130,7 +130,7 @@ export class ArtService {
       );
     }
 
-    if (art.userId !== userId) {
+    if (!this.isOwner(id, userId)) {
       throw new HttpException(
         {
           message: 'YOU ARE NOT THE RIGHTFUL OWNER',
@@ -178,7 +178,7 @@ export class ArtService {
       );
     }
 
-    if (art.userId !== userId) {
+    if (!this.isOwner(id, userId)) {
       throw new HttpException(
         {
           message: 'YOU ARE NOT THE RIGHTFUL OWNER',
@@ -199,5 +199,22 @@ export class ArtService {
     const res = await this.dbService.art.delete({ where: { id } });
 
     return res;
+  }
+
+  async isOwner(artId: string, userId: string) {
+    const art = await this.dbService.art.findUnique({ where: { id: artId } });
+
+    if (!art) {
+      throw new HttpException(
+        { message: "Art doesn't exist", statusCode: HttpStatus.NOT_FOUND },
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    if (art.userId !== userId) {
+      return false;
+    }
+
+    return true;
   }
 }

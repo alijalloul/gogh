@@ -33,6 +33,14 @@ export class ArtController {
     return this.artService.fetch(page, limit, search, userId);
   }
 
+  @Get('isOwner/:id')
+  @UseGuards(JwtAuthGaurd)
+  isOwner(@Param('id') id: string, @Req() req: Request) {
+    const userId = req.user as string;
+
+    return this.artService.isOwner(id, userId);
+  }
+
   @Post()
   @UseInterceptors(FileInterceptor('file'))
   @UseGuards(JwtAuthGaurd)
