@@ -39,12 +39,16 @@ const handleMouseUp = (artId?: string) => {
   <div
     v-for="(item, index) in items"
     :key="item.id"
-    @mouseup="() => handleMouseUp(item.id)"
     :class="`item relative overflow-hidden hover:cursor-pointer ${customClass}`"
   >
     <div
       class="opacity-0 flex flex-col justify-between hover:opacity-100 absolute z-10 top-0 left-0 w-full h-full bg-black bg-opacity-50 text-white p-4 transition-all"
     >
+      <div
+        class="absolute top-0 left-0 w-full h-full z-10"
+        @mouseup="() => handleMouseUp(item.id)"
+      ></div>
+
       <div class="flex justify-between items-start">
         <div>
           <h1 class="text-xl font-bold">{{ item.title }}</h1>
@@ -52,7 +56,11 @@ const handleMouseUp = (artId?: string) => {
         </div>
 
         <div>
-          <FontAwesomeIcon v-if="item.userId === props.userId" icon="pen" />
+          <FontAwesomeIcon
+            v-if="item.userId === props.userId"
+            icon="pen"
+            class="z-20"
+          />
         </div>
       </div>
 
@@ -62,7 +70,7 @@ const handleMouseUp = (artId?: string) => {
             v-if="item.userId === props.userId"
             icon="trash"
             @click="() => useArtStore().removeArt(item.id)"
-            :class="`hover:text-red-500 active:text-red-600`"
+            :class="`hover:text-red-500 active:text-red-600 z-20`"
           />
         </div>
         <div class="flex justify-center items-center space-x-3">
@@ -74,7 +82,7 @@ const handleMouseUp = (artId?: string) => {
             icon="heart"
             @click="() => !isLiking && handleLiking(item)"
             size="lg"
-            :class="` hover:text-red-200 transition-all duration-300 ${
+            :class="` hover:text-red-200 transition-all duration-300 z-20 ${
               isLiking
                 ? 'text-gray-300 hover:text-gray-300'
                 : item.Likes.includes(props.userId as string)

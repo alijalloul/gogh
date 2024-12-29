@@ -31,13 +31,13 @@ onMounted(() => {
 
 <template>
   <header
-    class="relative z-30 w-full flex justify-between items-center py-5 px-12 pointer-events-none"
+    class="relative z-30 w-full flex justify-between items-center py-5 pointer-events-none"
   >
     <div
-      class="header_container flex justify-center items-center space-x-2 opacity-0"
+      class="header_container flex justify-center items-center space-x-2 opacity-0 px-8"
     >
       <div class="title overflow-hidden h-20" ref="title">
-        <h1 class="text-6xl font-medium text-white">Gogh</h1>
+        <h1 class="text-6xl font-medium text-black">Gogh</h1>
       </div>
 
       <RouterLink to="/" class="pointer-events-auto">
@@ -49,7 +49,7 @@ onMounted(() => {
       </RouterLink>
     </div>
 
-    <div class="pointer-events-auto">
+    <div class="pointer-events-auto w-[10%] flex justify-center">
       <RouterLink
         v-if="user?.id"
         :to="{ name: 'users', params: { id: user.id } }"

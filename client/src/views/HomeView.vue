@@ -74,9 +74,12 @@ watch(isView, (value) => {
         >
       </div>
     </div>
+
+    <div class="w-[10%]"></div>
+
     <div
       v-if="heroArt.items && heroArt.items.length > 0"
-      class="relative w-[90%] h-full flex justify-between items-center"
+      class="relative w-[80%] h-full flex justify-between items-center"
     >
       <ArtMarquee
         :items="heroArt.items.slice(0, 3)"
@@ -98,6 +101,16 @@ watch(isView, (value) => {
         :isInverse="true"
         :isPlaying="isView"
       />
+    </div>
+
+    <div class="w-[10%] h-full flex flex-col justify-end">
+      <div class="w-full flex justify-center items-center py-5">
+        <RouterLink
+          to="/art"
+          class="text-xl rounded-xl px-6 py-3 border border-gray-500 bg-white hover:bg-gray-200 active:bg-gray-300 transition-all duration-300 hover:cursor-pointer"
+          >View All</RouterLink
+        >
+      </div>
     </div>
   </div>
 </template>
