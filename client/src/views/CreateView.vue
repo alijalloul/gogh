@@ -11,6 +11,7 @@ const artId = route.params.id as string;
 
 const title = ref("");
 const desc = ref("");
+const isOwnerOfArt = ref(true);
 
 const previewUrl = ref<string | null>(null);
 
@@ -20,6 +21,23 @@ const fileInput = ref<HTMLInputElement | null>(null);
 const { token } = storeToRefs(useUserStore());
 
 onMounted(() => {
+  async function isOwner(artId: string) {
+    try {
+      const res = await fetch(`${BASE_URL}/api/art/isOwner/${artId}`, {
+        method: "GET",
+        headers: {
+          authorization: `Bearer ${token.value}`,
+        },
+      });
+      if (res.ok) {
+        const data = await res.json();
+
+        isOwnerOfArt.value = data;
+      }
+    } catch (error) {
+      console.log("error fetching the art with id: ", artId, ": ", error);
+    }
+  }
   async function fetchArt(artId: string) {
     try {
       const res = await fetch(`${BASE_URL}/api/art/${artId}`);
@@ -36,6 +54,7 @@ onMounted(() => {
   }
 
   if (artId) {
+    isOwner(artId);
     fetchArt(artId);
   }
 });
@@ -111,7 +130,10 @@ const handleSubmit = async () => {
 </script>
 
 <template>
-  <div class="flex-1 items-stretch min-h-0 w-screen flex justify-center">
+  <div
+    v-if="isOwnerOfArt"
+    class="flex-1 items-stretch min-h-0 w-screen flex justify-center"
+  >
     <div class="w-[90%] rounded-lg flex justify-between p-5 flex-col space-y-5">
       <div class="h-[70vh] items-stretch flex justify-between">
         <div class="w-2/5 flex flex-col space-y-5">
@@ -163,5 +185,9 @@ const handleSubmit = async () => {
         </button>
       </div>
     </div>
+  </div>
+
+  <div v-else class="flex-1 flex justify-center items-center">
+    <span class="text-5xl font-medium">YOU ARE NOT THE OWNER OF THIS ART</span>
   </div>
 </template>
