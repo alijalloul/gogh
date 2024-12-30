@@ -1,2 +1,7 @@
-export const BASE_URL =
-  import.meta.env.VITE_BASE_URL || "http://localhost:5000";
+// src/utils/getBaseUrl.ts
+import { useRuntimeConfig } from "nuxt/app";
+
+export const getBaseUrl = () => {
+  const config = useRuntimeConfig();
+  return config.public.baseUrl || "http://localhost:5000";
+};

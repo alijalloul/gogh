@@ -1,11 +1,9 @@
 <script setup lang="ts">
+import router from "@/router";
 import type { ArtDto } from "@/src/Dto/artDto";
-import { useArtStore } from "@/store/useArtStore";
+import { useArtStore } from "@/src/store/useArtStore";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { useRouter } from "nuxt/app";
 import { storeToRefs } from "pinia";
-
-const router = useRouter();
 
 const { isLiking } = storeToRefs(useArtStore());
 

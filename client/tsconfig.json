@@ -1,16 +1,11 @@
 {
   "compilerOptions": {
-    "types": ["node", "react", "react-dom"],
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-  },
-  "files": [],
-  "references": [
-    {
-      "path": "./tsconfig.node.json"
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
     },
-    {
-      "path": "./tsconfig.app.json"
-    }
-  ]
+    "types": ["nuxt", "node"],
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true
+  }
 }

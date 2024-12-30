@@ -1,8 +1,9 @@
 <script setup lang="ts">
+import { useUserStore } from "@/src/store/useUserStore";
 import { gsap } from "gsap";
 import { storeToRefs } from "pinia";
 import { onMounted } from "vue";
-import { useUserStore } from "../store/useUserStore";
+import { RouterLink } from "vue-router";
 
 const { user } = storeToRefs(useUserStore());
 
@@ -39,27 +40,27 @@ onMounted(() => {
         <h1 class="text-6xl font-medium text-black">Gogh</h1>
       </div>
 
-      <NuxtLink to="/" class="pointer-events-auto">
+      <RouterLink to="/" class="pointer-events-auto">
         <img
           src="/images/ear.png"
           alt="gogh's_ear.png"
           class="image w-14 h-auto"
         />
-      </NuxtLink>
+      </RouterLink>
     </div>
 
     <div class="pointer-events-auto w-[10%] flex justify-center">
-      <NuxtLink
+      <RouterLink
         v-if="user?.id"
         :to="{ name: 'users', params: { id: user.id } }"
         class="text-3xl rounded-xl px-6 py-3 text-white bg-black hover:bg-gray-900 active:bg-gray-800 transition-all duration-300 hover:cursor-pointer"
-        >Profile</NuxtLink
+        >Profile</RouterLink
       >
-      <NuxtLink
+      <RouterLink
         v-else
-        to="/auth/login"
+        to="/login"
         class="text-3xl rounded-xl px-6 py-3 text-white bg-black hover:bg-gray-900 active:bg-gray-800 transition-all duration-300 hover:cursor-pointer"
-        >Login</NuxtLink
+        >Login</RouterLink
       >
     </div>
   </header>
