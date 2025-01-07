@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { gsap } from "gsap";
 import { storeToRefs } from "pinia";
 import { onMounted } from "vue";
 import { useUserStore } from "../store/useUserStore";
+import { useNuxtApp } from "nuxt/app";
+
+const { $gsap: gsap } = useNuxtApp();
 
 const { user } = storeToRefs(useUserStore());
 

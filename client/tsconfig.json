@@ -1,10 +1,13 @@
 {
   "compilerOptions": {
+    "moduleResolution": "node",
+    "module": "esnext",
+    "types": ["@nuxt/types"],
+    "target": "esnext",
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     },
-    "types": ["nuxt", "node"],
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true
   }
